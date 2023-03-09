@@ -9,3 +9,4 @@ print('Connected to MongoDB...')
 db = client[settings.DATABASE_NAME]
 
 News = db.news
+Teste = db['collection_teste']

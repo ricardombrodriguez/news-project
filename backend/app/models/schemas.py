@@ -1,15 +1,17 @@
 from datetime import datetime
-from typing import List
-from pydantic import BaseModel, EmailStr, constr
+from typing import List, Optional
+from pydantic import BaseModel, EmailStr, constr, Field
 from bson.objectid import ObjectId
 
 class News(BaseModel):
     title: str
     description: str
-    content: str
+    topic: str
+    content: str = Field(...)
     author: str
-    image: str
-    date: datetime
+    image: Optional[bytes]
+    image_content_type: Optional[str]
+    date: Optional[datetime]
     
     
     

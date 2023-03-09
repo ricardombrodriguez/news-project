@@ -1,5 +1,24 @@
 version: '3.7'
 services:
+  api:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    
+    hostname: api
+    ports:
+      - 8000:8000
+    
+    depends_on:
+      - mongo
+    
+    restart: always
+    
+    environment:
+      - PROJECT_NAME=The News
+      - DATABASE_URL=mongodb://admin:password123@mongo:27017/thenews?authSource=admin
+      - DATABASE_NAME=thenews
+      
   mongo:
     image: mongo:latest
     container_name: mongo
