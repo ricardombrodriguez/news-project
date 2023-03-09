@@ -1,33 +1,21 @@
 version: '3.7'
 services:
   api:
+    image: thenews_api
     build: 
       context: .
       dockerfile: Dockerfile
-    
-    hostname: api
-    ports:
-      - 8000:8000
-    
     depends_on:
       - mongo
-    
+    ports:
+      - 8000:8000
     restart: always
-    
-    environment:
-      - PROJECT_NAME=The News
-      - DATABASE_URL=mongodb://admin:password123@mongo:27017/thenews?authSource=admin
-      - DATABASE_NAME=thenews
       
   mongo:
     image: mongo:latest
     container_name: mongo
     env_file:
       - ./.env
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: password123
-      MONGO_INITDB_DATABASE: thenews
     volumes:
       - mongo:/data/db
     ports:
