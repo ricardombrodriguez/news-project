@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.db.models.functions import Concat
 from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
@@ -16,48 +15,47 @@ from app.serializers import GroupsSerializer, UsersSerializer, PublicationStatus
     PublicationTopicsSerializer, PublicationsSerializer, CommentsSerializer, FavoritesSerializer, UserSerializer, TokenSerializer
 
 
-# Create your views here.
+# Create authentication token
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
 
 
-# Métodos do Groups
+# ============== GROUPS ================== #
+
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def get_group(request):
+def get_groups(request):
+
     groups = Groups.objects.all()
-
-    # PROVAVELMENTE VAI SER PRECISO DIZER QUEM PEDIU PARA SABER QUE GRUPOS LHE MANDAR
-
     serializer = GroupsSerializer(groups, many=True)
-    print(serializer)
     return Response(serializer.data)
+
+
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def get_groupDescription(request):
+def get_group_by_description(request):
+
     groups = Groups.objects.all()
     group = (request.GET['description'])
-
     ret = []
     for pub in groups:
         if pub.description == group or (pub.description == "Admin" and group == "Gestor"):
             continue
         else:
             ret.append(pub)
-    print(ret)
     serializer = GroupsSerializer(ret, many=True)
-
     return Response(serializer.data)
 
 
-# Métodos do User
+# ============== USER ================== #
+
 @api_view(['POST'])
 def create_user(request):
-    print(request.data)
+
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
         ret = serializer.create(request.data)
@@ -69,15 +67,13 @@ def create_user(request):
 @api_view(['PUT'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def update_user(request):
-    id = request.data['id']
+def update_user(request, id):
     try:
         user = Users.objects.get(id=id)
     except Users.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
-    request.data["group"]=    request.data["group"]["id"]
+    request.data["group"] = request.data["group"]["id"]
     serializer = UsersSerializer(user, data=request.data)
-    print(serializer)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data)
@@ -86,17 +82,15 @@ def update_user(request):
 
 @api_view(['GET'])
 def get_users(request):
-    users = Users.objects.all()
-    # Devo precisar de saber quem me pediu para saber quantos lhe posso mostrar mas depois ponho isto
-    # que agora ainda estou na fase de tentar meter tudo o que é preciso
 
+    users = Users.objects.all()
     serializer = UsersSerializer(users, many=True)
     return Response(serializer.data)
 
 
 @api_view(['GET'])
-def get_user(request):
-    id = int(request.GET['id'])
+def get_user(request, id):
+
     try:
         user = Users.objects.get(id=id)
     except Users.DoesNotExist:
@@ -108,8 +102,8 @@ def get_user(request):
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def get_user_by_username(request):
-    username = request.GET['username']
+def get_user_by_username(request, username):
+
     try:
         user = Users.objects.get(username=username)
     except Users.DoesNotExist:
@@ -117,35 +111,36 @@ def get_user_by_username(request):
     serializer = UsersSerializer(user)
     return Response(serializer.data)
 
-# Apagar users'?????
 
-##Publication Status
-# Nao vai ter create nem delete so vai ter gets
+
+# ============== PUBLICATION STATUS ================== #
 
 
 @api_view(['GET'])
-def pub_status_getALl(request):
+def get_all_pub_status(request):
+
     ret = Publication_status.objects.all()
     serializer = PublicationStatusSerializer(ret, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
-def pub_status_getOne(request):
-    # Acho que é melhor fazer o get Pela descrição do que pelo id
-    id = (request.GET['description'])
+def get_pub_status(request, description):
+
     try:
-        ret = Publication_status.objects.get(description__exact=id)
+        ret = Publication_status.objects.get(description__exact=description)
     except Publication_status.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     serializer = PublicationStatusSerializer(ret)
     return Response(serializer.data)
 
 
-## Publication Topics
+
+
+# ============== PUBLICATION TOPICS ================== #
+
 @api_view(['GET'])
-def get_pub_topic(request):
-    # Penso que faça mais sentido fazer o get pela descrição do que pelo id
-    id = int(request.GET['id'])
+def get_pub_topic(request, id):
+
     try:
         ret = Publication_topics.objects.get(id=id)
     except Publication_topics.DoesNotExist:
@@ -154,8 +149,8 @@ def get_pub_topic(request):
     return Response(serializer.data)
 
 @api_view(['GET'])
-def get_pub_topic_by_description(request):
-    description = int(request.GET['description'])
+def get_pub_topic_by_description(request, description):
+
     try:
         ret = Publication_topics.objects.get(description=description)
     except Publication_topics.DoesNotExist:
@@ -164,32 +159,21 @@ def get_pub_topic_by_description(request):
     return Response(serializer.data)
 
 
-
 @api_view(['GET'])
 def get_pub_topics(request):
+
     ret = Publication_topics.objects.all()
     serializer = PublicationTopicsSerializer(ret, many=True)
     return Response(serializer.data)
 
 
-    publications = Publications.objects.all()
-    ret = []
-    state = Publication_status.objects.get(description="Por Aprovar")
-    for publication in publications:
-        if publication.status == state:
-            ret.append(publication)
-
-    serializer = PublicationsSerializer(ret, many=True)
-
-
-
 @api_view(['GET'])
 def get_pub_topics_enabled(request):
+
     ret = Publication_topics.objects.all()
     enabled_topics = []
     for topic in ret:
         if topic.enabled:
-            print(topic)
             enabled_topics.append(topic)
     serializer = PublicationTopicsSerializer(enabled_topics, many=True)
     return Response(serializer.data)
@@ -199,7 +183,6 @@ def get_pub_topics_enabled(request):
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def get_pub_topics_create(request):
-    print(request.data)
 
     serializer = PublicationTopicsSerializer(data=request.data)
     if serializer.is_valid():
@@ -211,9 +194,8 @@ def get_pub_topics_create(request):
 @api_view(['PUT'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def get_pub_topics_update(request):
-    # Não sei se vai ser pelo id se pela descrição, vou deixar pelo id e mais tarde troca-se se for preciso
-    id = request.data['id']
+def get_pub_topics_update(request, id):
+
     try:
         ret = Publication_topics.objects.get(id=id)
     except Publication_topics.DoesNotExist:
@@ -229,8 +211,8 @@ def get_pub_topics_update(request):
 @api_view(['PUT'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def pub_topic_disable(request):
-    id = request.data['id']
+def pub_topic_disable(request, id):
+
     try:
         ret = Publication_topics.objects.get(id=id)
     except Publication_topics.DoesNotExist:
@@ -245,8 +227,8 @@ def pub_topic_disable(request):
 @api_view(['PUT'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def pub_topic_enable(request):
-    id = request.data['id']
+def pub_topic_enable(request, id):
+
     try:
         ret = Publication_topics.objects.get(id=id)
     except Publication_topics.DoesNotExist:
@@ -260,10 +242,14 @@ def pub_topic_enable(request):
 
 
 
-##PUBLICATION
+
+
+# ============== PUBLICATIONS ================== #
+
+
 @api_view(['GET'])
-def pub(request):
-    id = int(request.GET['id'])
+def get_publication(request, id):
+
     try:
         ret = Publications.objects.get(id=id)
     except Publications.DoesNotExist:
@@ -273,7 +259,8 @@ def pub(request):
 
 
 @api_view(['GET'])
-def pubs(request):
+def get_publications(request):
+
     ret = Publications.objects.all()
     serializer = PublicationsSerializer(ret, many=True)
     return Response(serializer.data)
@@ -282,8 +269,8 @@ def pubs(request):
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def pubcreate(request):
-    print(request.data)
+def create_publication(request):
+
     description = request.data['status']['description']
     stat = Publication_status.objects.get(description__exact=description)
     request.data['topic'] = request.data['topic']['id']
@@ -301,38 +288,32 @@ def pubcreate(request):
 @api_view(['PUT'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def pubupd(request):
-    pid =request.data['id']
+def update_publication(request, id):
 
-    autor=request.data["author"]
+    author=request.data["author"]
     topic=request.data["topic"]
     status=request.data["status"]
     try:
-        ret = Publications.objects.get(id=pid)
+        ret = Publications.objects.get(id=id)
     except Publications.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
-    request.data["author"]=(autor["id"])
+    request.data["author"]=(author["id"])
     request.data["topic"]=(topic["id"])
-    print(request.data["status"])
     request.data["status"] = (status["id"])
     serializer = PublicationsSerializer(ret, data=request.data)
-
     if serializer.is_valid():
         serializer.save()
-        print("FIZ SAVE")
         return Response(serializer.data)
-    print(serializer.errors)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 
+# ============== COMMENTS ================== #
 
-##COMMENTS
-# NOS NO OUTRO PROJETO NÃO TINHAMOS O UPDATE DE UM COMENTÁRIO não sei se querem colocar ou não, se quiserem
-# depois meto
+
 @api_view(['GET'])
-def comment(request):
-    id = int(request.GET['id'])
+def get_comment(request, id):
+
     try:
         ret = Comments.objects.get(id=id)
     except Comments.DoesNotExist:
@@ -342,29 +323,31 @@ def comment(request):
 
 
 @api_view(['GET'])
-def comments(request):
+def get_all_comments(request):
+
     ret = Comments.objects.all()
     serializer = CommentsSerializer(ret, many=True)
     return Response(serializer.data)
 
-#Código para obter os comentários de uma publicação
+
 @api_view(['GET'])
-def commentsPublication(request):
-    id = int(request.GET['id'])  # ID DA PUBLICAÇÃO
+def get_publication_comments(request, id):
+
     ret = Comments.objects.all()
-    retorno = []
+    returned = []
     for x in ret:
         if x.publication.id == id:
-            retorno.append(x)
-    serializer = CommentsSerializer(retorno, many=True)
+            returned.append(x)
+    serializer = CommentsSerializer(returned, many=True)
     return Response(serializer.data)
 
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def commentcre(request):
-    request.data["author"]=request.data["author"]["id"]
-    request.data["publication"]=request.data["publication"]["id"]
+def create_publication_comment(request):
+
+    request.data["author"] = request.data["author"]["id"]
+    request.data["publication"] = request.data["publication"]["id"]
     serializer = CommentsSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
@@ -375,7 +358,8 @@ def commentcre(request):
 @api_view(['DELETE'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def commentdel(request,id):
+def delete_publication_comment(request, id):
+
     try:
         ret = Comments.objects.get(id=id)
     except Comments.DoesNotExist:
@@ -384,12 +368,16 @@ def commentdel(request,id):
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-## FAVORITOS
-# Aqui não faz sentido ter updates, porque ou é favorito ou não é
+
+
+
+# ============== LIKES ================== #
+
+
 
 @api_view(['GET'])
-def fav(request):
-    id = int(request.GET['id'])
+def get_like(request, id):
+
     try:
         ret = Favorites.objects.get(id=id)
     except Favorites.DoesNotExist:
@@ -397,60 +385,60 @@ def fav(request):
     serializer = FavoritesSerializer(ret)
     return Response(serializer.data)
 
+
 @api_view(['GET'])
-def getSearchUsers(request):
+def get_search_users(request):
+
     group = (request.GET['group'])
     topic = (request.GET['topic'])
     name = (request.GET['name'])
     username = (request.GET['username'])
-    pubs = Users.objects.all()
+    users = Users.objects.all()
     if topic != 'null':
-        pubs = pubs.filter(group__description__exact=topic)
+        users = users.filter(group__description__exact=topic)
     if username!= 'null' :
-        pubs = pubs.filter(username__contains=username)
+        users = users.filter(username__contains=username)
     if name != 'null':
-        pubs = pubs.annotate(full_name=Concat('first_name', V(' '), 'last_name')). \
+        users = users.annotate(full_name=Concat('first_name', V(' '), 'last_name')). \
             filter(full_name__contains=name)
     ret=[]
-    for pub in pubs:
-        if pub.group.description==group or (pub.group.description=="Admin" and group=="Gestor"):
+    for user in users:
+        if user.group.description==group or (user.group.description=="Admin" and group=="Gestor"):
             continue
         else:
-            ret.append(pub)
+            ret.append(user)
     serializer = UsersSerializer(ret, many=True)
     return Response(serializer.data)
 
 
 @api_view(['GET'])
-def getSearchUsersPossible(request):
+def get_users_by_group(request):
+
     group = (request.GET['group'])
-
-    pubs = Users.objects.all()
-
-    ret=[]
-    for pub in pubs:
-        if pub.group.description==group or (pub.group.description=="Admin" and group=="Gestor"):
+    users = Users.objects.all()
+    ret = []
+    for user in users:
+        if user.group.description == group or (user.group.description=="Admin" and group=="Gestor"):
             continue
         else:
-            ret.append(pub)
+            ret.append(user)
     serializer = UsersSerializer(ret, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
-def favs(request):
+def get_likes(request):
+
     ret = Favorites.objects.all()
     serializer = FavoritesSerializer(ret, many=True)
     return Response(serializer.data)
 
 
 @api_view(['GET'])
-def checkIfFavorite(request):
+def verify_pub_like_by_user(request, id):
 
-    id = int(request.GET['id'])
     user_id = int(request.GET['user_id'])
     pub = Publications.objects.get(id=id)
     author = Users.objects.get(id=user_id)
-
     try:
         ret=Favorites.objects.get(author=author,publication=pub)
     except Favorites.DoesNotExist:
@@ -462,12 +450,12 @@ def checkIfFavorite(request):
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def favcre(request):
-    print(request.data)
+def create_like(request, id):
+
     author=request.data["author"]
     request.data["author"]= Users.objects.get(id=author["id"]).id
     pub=request.data["publication"]
-    request.data["publication"]=Publications.objects.get(id=pub["id"]).id
+    request.data["publication"]=id
     serializer = FavoritesSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
@@ -478,10 +466,9 @@ def favcre(request):
 @api_view(['DELETE'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def favdel(request,id):
+def delete_like(request, id):
 
     try:
-
         ret = Favorites.objects.get(id=id)
     except Favorites.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
@@ -492,16 +479,16 @@ def favdel(request,id):
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def getAuthorPublications(request):
-    id = int(request.GET['id'])
+def get_author_publications(request, username):
+
     try:
-        autor = Users.objects.get(id=id)
+        author = Users.objects.get(username__exact=username)
     except Users.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     publications= Publications.objects.all()
     ret = []
     for publication in publications:
-        if publication.author == autor:
+        if publication.author == author:
             ret.append(publication)
 
 
@@ -509,99 +496,11 @@ def getAuthorPublications(request):
     return Response(serializer.data)
 
 
-@api_view(['GET'])
-@authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
-def getAuthorPublicationsApproved(request):
-    id = int(request.GET['id'])
-    try:
-        user = Users.objects.get(id=id)
-    except Users.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    publications = Publications.objects.all()
-    ret = []
-    state = Publication_status.objects.get(description="Aprovado")
-    for publication in publications:
-        if publication.author == user and publication.status == state:
-            ret.append(publication)
-
-    serializer = PublicationsSerializer(ret, many=True)
-    return Response(serializer.data)
 
 
 @api_view(['GET'])
-@authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
-def getAuthorPublicationsPendent(request):
-    id = int(request.GET['id'])
-    try:
-        autor = Users.objects.get(id=id)
-    except Users.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    publications = Publications.objects.all()
-    ret = []
-    state = Publication_status.objects.get(description="Por Aprovar")
-    for publication in publications:
-        if publication.author == autor and publication.status == state:
-            ret.append(publication)
+def get_search_publications_by_status(request, status):
 
-    serializer = PublicationsSerializer(ret, many=True)
-    return Response(serializer.data)
-
-@api_view(['GET'])
-def getPublicationsPendent(request):
-
-    publications = Publications.objects.all()
-    ret = []
-    state = Publication_status.objects.get(description="Por Aprovar")
-    for publication in publications:
-        if publication.status == state:
-            ret.append(publication)
-
-    serializer = PublicationsSerializer(ret, many=True)
-    return Response(serializer.data)
-
-@api_view(['GET'])
-def getPublicationsApproved(request):
-    publications = Publications.objects.all()
-    ret = []
-    state = Publication_status.objects.get(description="Aprovado")
-    for publication in publications:
-        if publication.status == state:
-            ret.append(publication)
-
-    serializer = PublicationsSerializer(ret, many=True)
-    return Response(serializer.data)
-
-@api_view(['GET'])
-def getSearchPublicationsApproved(request):
-    author = (request.GET['author'])
-    title = (request.GET['title'])
-    date = (request.GET['date'])
-    topic = (request.GET['topic'])
-    pubs = Publications.objects.all()
-
-    if title:
-        pubs = pubs.filter(title__contains=title)
-    if date:
-        pubs = pubs.filter(created_on__date=date)
-    if author:
-        pubs = pubs.annotate(full_name=Concat('author__first_name', V(' '), 'author__last_name')). \
-            filter(full_name__contains=author)
-    if topic:
-        pubs = pubs.filter(topic__description__exact=topic)
-    ret = []
-    state = Publication_status.objects.get(description="Aprovado")
-    for publication in pubs:
-        if publication.status == state:
-            ret.append(publication)
-
-    serializer = PublicationsSerializer(ret, many=True)
-    return Response(serializer.data)
-
-
-@api_view(['GET'])
-def getSearchPublicationsPendent(request):
     author = (request.GET['author'])
     title = (request.GET['title'])
     date = (request.GET['date'])
@@ -617,7 +516,7 @@ def getSearchPublicationsPendent(request):
     if topic:
         pubs = pubs.filter(topic__description__exact=topic)
     ret = []
-    state = Publication_status.objects.get(description="Por Aprovar")
+    state = Publication_status.objects.get(description__exact=status)
     for publication in pubs:
         if publication.status == state:
             ret.append(publication)
@@ -627,65 +526,12 @@ def getSearchPublicationsPendent(request):
 
 
 @api_view(['GET'])
-def getSearchPublicationsFilled(request):
-    author = (request.GET['author'])
-    title = (request.GET['title'])
-    date = (request.GET['date'])
-    topic = (request.GET['topic'])
-    pubs = Publications.objects.all()
-    if title:
-        pubs = pubs.filter(title__contains=title)
-    if date:
-        pubs = pubs.filter(created_on__date=date)
-    if author:
-        pubs = pubs.annotate(full_name=Concat('author__first_name', V(' '), 'author__last_name')). \
-            filter(full_name__contains=author)
-    if topic:
-        pubs = pubs.filter(topic__description__exact=topic)
-    ret = []
-    state = Publication_status.objects.get(description="Arquivado")
-    for publication in pubs:
-        if publication.status == state:
-            ret.append(publication)
-
-    serializer = PublicationsSerializer(ret, many=True)
-    return Response(serializer.data)
-@api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def getSearchPublicationsPendentByUser(request):
-    id = int(request.GET['id'])
+def get_author_searched_publications_by_status(request, username, status):
+
     try:
-        autor = Users.objects.get(id=id)
-    except Users.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    title = (request.GET['title'])
-    date = (request.GET['date'])
-    topic = (request.GET['topic'])
-    pubs = Publications.objects.all()
-
-    if title:
-        pubs = pubs.filter(title__contains=title)
-    if date:
-        pubs = pubs.filter(created_on__date=date)
-
-    if topic:
-        pubs = pubs.filter(topic__description__exact=topic)
-    ret = []
-    state = Publication_status.objects.get(description="Por Aprovar")
-    for publication in pubs:
-        if publication.status == state and publication.author==autor:
-            ret.append(publication)
-
-    serializer = PublicationsSerializer(ret, many=True)
-    return Response(serializer.data)
-@api_view(['GET'])
-@authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
-def getSearchPublicationsApprovedByUser(request):
-    id = int(request.GET['id'])
-    try:
-        autor = Users.objects.get(id=id)
+        author = Users.objects.get(username__exact=username)
     except Users.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     title = (request.GET['title'])
@@ -700,68 +546,40 @@ def getSearchPublicationsApprovedByUser(request):
     if topic:
         pubs = pubs.filter(topic__description__exact=topic)
     ret = []
-    state = Publication_status.objects.get(description="Aprovado")
+    state = Publication_status.objects.get(description__exact=status)
     for publication in pubs:
-        if publication.status == state and publication.author==autor:
+        if publication.status == state and publication.author==author:
             ret.append(publication)
 
     serializer = PublicationsSerializer(ret, many=True)
     return Response(serializer.data)
 
 
-@api_view(['GET'])
-@authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
-def getSearchPublicationsFilledByUser(request):
-    id = int(request.GET['id'])
-    try:
-        autor = Users.objects.get(id=id)
-    except Users.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    title = (request.GET['title'])
-    date = (request.GET['date'])
-    topic = (request.GET['topic'])
-    pubs = Publications.objects.all()
-    if title:
-        pubs = pubs.filter(title__contains=title)
-    if date:
-        pubs = pubs.filter(created_on__date=date)
-
-    if topic:
-        pubs = pubs.filter(topic__description__exact=topic)
-    ret = []
-    state = Publication_status.objects.get(description="Arquivado")
-    for publication in pubs:
-        if publication.status == state and publication.author==autor:
-            ret.append(publication)
-
-    serializer = PublicationsSerializer(ret, many=True)
-    return Response(serializer.data)
 
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def getAuthorPublicationsArquivadas(request):
-    id = int(request.GET['id'])
+def get_author_publications_by_status(request, username, status):
+
     try:
-        autor = Users.objects.get(id=id)
+        author = Users.objects.get(username__exact=username)
     except Users.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     publications = Publications.objects.all()
     ret = []
-    state = Publication_status.objects.get(description="Arquivado")
+    state = Publication_status.objects.get(description__exact=status)
     for publication in publications:
-        if publication.author == autor and publication.status == state:
+        if publication.author == author and publication.status == state:
             ret.append(publication)
     serializer = PublicationsSerializer(ret, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
-def getPublicationsArquivadas(request):
+def get_publication_by_status(request, status):
 
     publications = Publications.objects.all()
     ret = []
-    state = Publication_status.objects.get(description="Arquivado")
+    state = Publication_status.objects.get(description__exact=status)
     for publication in publications:
         if  publication.status == state:
             ret.append(publication)
@@ -772,16 +590,17 @@ def getPublicationsArquivadas(request):
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def getAuthorFavoritePublications(request):
+def get_user_liked_publications(request):
+
     id = int(request.GET['id'])
     try:
-        autor = Users.objects.get(id=id)
+        author = Users.objects.get(id=id)
     except Users.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     favoritos = Favorites.objects.all()
     ret = []
     for publication in favoritos:
-        if publication.author == autor  and publication.publication.status.description=="Aprovado":
+        if publication.author == author  and publication.publication.status.description=="Approved":
             ret.append(publication.publication)
     serializer = PublicationsSerializer(ret, many=True)
     return Response(serializer.data)
@@ -794,7 +613,8 @@ def getAuthorFavoritePublications(request):
 
 
 @api_view(['GET'])
-def getSearchPublicationsFavorites(request):
+def search_user_liked_publications(request):
+
     id = int(request.GET['id'])
     author = (request.GET['author'])
     title = (request.GET['title'])
@@ -811,13 +631,13 @@ def getSearchPublicationsFavorites(request):
     if topic:
         pubs = pubs.filter(topic__description__exact=topic)
     try:
-        autor = Users.objects.get(id=id)
+        author = Users.objects.get(id=id)
     except Users.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     favoritos = Favorites.objects.all()
     ret = []
     for publication in favoritos:
-        if publication.author == autor  and publication.publication in pubs:
+        if publication.author == author  and publication.publication in pubs:
             ret.append(publication.publication)
 
     serializer = PublicationsSerializer(ret, many=True)
