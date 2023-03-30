@@ -3,6 +3,13 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+
+data/
+
+node_modules/
+yarn.lock
+
+
 # C extensions
 *.so
 

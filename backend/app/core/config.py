@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     
     DATABASE_NAME: str
     
-    
+    REDIS_PASSWORD: str
 
     @validator("BACKEND_CORS_ORIGINS", pre=True)
     def assemble_cors_origins(cls, v: Union[str, List[str]]) -> Union[List[str], str]:
