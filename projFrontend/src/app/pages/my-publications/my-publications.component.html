@@ -1,0 +1,239 @@
+<app-menu></app-menu>
+
+<div class="wrapper">
+
+
+    <div class="content-wrapper">
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="mb-2 col-6">
+                        <h1 class="m-0">My Publications</h1>
+                    </div>
+                    <div class="mb-2 col-6">
+                        <button style="align-content: center" routerLink="/create_publication"
+                            class="m-0 float-right btn btn-primary">+ Add publication</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main content -->
+        <div class="content">
+            <div class="container-fluid">
+                <form action="" method="post" [formGroup]="contactForm">
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="row">
+                                <div class="col-2 input-group mb-3">
+                                    <b>Title:</b>
+                                </div>
+                                <div class="col-10 float-right">
+                                    <input formControlName="title" type="text" id="title" name="title">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-3">
+                            <div class="row">
+                                <div class="input-group date col-2" data-target-input="nearest">
+                                    <b>Date:</b>
+                                </div>
+                                <div class="col-10">
+                                    <input formControlName="date" type="date" id="date" name="date">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+
+                        <div class="col-10">
+                            <div class="row">
+                                <div class="input-group mb-3 col-2">
+                                    <b>Topic:</b>
+                                </div>
+                                <div class="col-10">
+                                    <select formControlName="topic" class="form-control" id="topic" name="topic">
+                                        <option [ngValue]="null">Select Topic</option>
+                                        <option *ngFor="let topic of topics">{{topic.description}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-1">
+                            <button (click)="getFormData()" type="submit" class="btn btn-primary btn-sm"><i
+                                    class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+
+                </form>
+
+
+                <div class="card card-default mt-3">
+                    <div class="card-body">
+
+                        <h3>Approved publications</h3><br>
+                        <!-- AQUI -->
+                        <!-- Listar as publicações -->
+                        <hr>
+                        <div *ngFor="let publication of publications">
+                            <app-publication [publication]="publication">
+                            </app-publication>
+                        </div>
+                        <p *ngIf="publications.length==0">No approved publications.</p>
+
+                        <!-- {% for pub in pubs_aproved %}
+                            <tr class="publication_row">
+                                <td>
+                                    <div onclick="location.href='../publication/{{ pub.id }}'">
+                                        <div class="row">
+                                            <div class="col-10">
+                                                <h3>{{ pub.title }}</h3>
+                                            </div>
+                                            <div class="ml-auto col-2">
+                                                <h4>{{ pub.author.first_name }} {{ pub.author.last_name }}</h4>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-0">
+                                            <div class="col-10">
+                                                <span class="badge badge-danger">{{ pub.topic.description
+                                                    }}</span>
+                                            </div>
+                                            <div class="col-2 ml-autor">
+                                                <p>{{ pub.created_on }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <p>Não existem publicações aprovadas disponíveis</p>
+                            {% endfor %} -->
+                    </div>
+                </div>
+                <div class="card card-default mt-3">
+                    <div class="card-body">
+
+                        <!-- publicações por aprovar -->
+                        <br>
+                        <h3>Pendent publications</h3>
+                        <br>
+                        <hr>
+                        <!-- AQUI -->
+                        <!-- Listar as publicações -->
+                        <div *ngFor="let publication of publications_pendent">
+                            <app-publication [publication]="publication">
+                            </app-publication>
+                        </div>
+                        <p *ngIf="publications_pendent.length==0">No pendent publications.</p>
+
+                        <!-- {% for pub in pubs_aproval %}
+                            <tr class="publication_row">
+                                <td>
+                                    <div>
+                                        <div class="row">
+                                            <div class="col-10">
+                                                <h3>{{ pub.title }}</h3>
+                                            </div>
+                                            <div class="ml-auto col-2">
+                                                <h4>{{ pub.author.first_name }} {{ pub.author.last_name }}</h4>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-0">
+                                            <div class="col-10">
+                                                <span class="badge badge-danger">{{ pub.topic.description
+                                                    }}</span>
+                                            </div>
+                                            <div class="col-2 ml-autor">
+                                                <p>{{ pub.created_on }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <p>Não existem publicações por aprovar disponíveis</p>
+                            {% endfor %} -->
+                    </div>
+                </div>
+                <div class="card card-default mt-3">
+                    <div class="card-body">
+                        <!-- Publicações arquivadas -->
+                        <br>
+                        <h3>Closed publications</h3>
+                        <br>
+                        <hr>
+                        <!-- AQUI -->
+                        <!-- Listar as publicações -->
+                        <div *ngFor="let publication of publications_filled">
+                            <app-publication [publication]="publication">
+                            </app-publication>
+                        </div>
+                        <p *ngIf="publications_filled.length==0">No closed publications.</p>
+                        <!-- {% for pub in pubs_arquivadas %}
+                            <tr class="publication_row">
+                                <td>
+                                    <div>
+                                        <div class="row">
+                                            <div class="col-10">
+                                                <h3>{{ pub.title }}</h3>
+                                            </div>
+                                            <div class="ml-auto col-2">
+                                                <h4>{{ pub.author.first_name }} {{ pub.author.last_name }}</h4>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-0">
+                                            <div class="col-10">
+                                                <span class="badge badge-danger">{{ pub.topic.description
+                                                    }}</span>
+                                            </div>
+                                            <div class="col-2 ml-autor">
+                                                <p>{{ pub.created_on }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <p>Não existem publicações arquivadas disponíveis</p>
+                            {% endfor %} -->
+
+                    </div>
+                </div>
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+
+<!-- jQuery -->
+<script src="../static/AdminLTE-3.1.0/plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="../static/AdminLTE-3.1.0/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE -->
+<script src="../static/AdminLTE-3.1.0/dist/js/adminlte.js"></script>
+
+<!-- OPTIONAL SCRIPTS -->
+<script src="../static/AdminLTE-3.1.0/plugins/chart.js/Chart.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="../static/AdminLTE-3.1.0/dist/js/demo.js"></script>
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<script src="../static/AdminLTE-3.1.0/dist/js/pages/dashboard3.js"></script>
+<!-- date-range-picker -->
+<script src="../static/AdminLTE-3.1.0/plugins/daterangepicker/daterangepicker.js"></script>
+<script>
+    $(function () {
+        //Date picker
+        $('#reservationdate').datetimepicker({
+            format: 'L'
+        });
+    });
+</script>

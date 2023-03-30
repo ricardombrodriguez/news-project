@@ -1,0 +1,40 @@
+Tabelas:
+
+- Groups: Grupos de utilizadores (gestor, autor e leitor)
+    id (chave primária)
+    description
+
+- Users: Tabela de users
+    id (chave primária)
+    username
+    first_name
+    last_name
+    password (pode sair, é tratada pelo django admin)
+    group (chave secundária de Groups 1:n)
+
+- Publication_status: Estados das publicações (por aprovar ou aprovadas)
+    id (chave primária)
+    description
+
+- Publication_topics: Temas (política, entretenimento, cultura, etc)
+    id (chave primária)
+    description
+
+- Publications: Tabela com as publicações
+    id (chave primária)
+    title
+    content
+    created_on
+    author (chave secundária de Users 1:n)
+    status (chave secundária de Publication_status 1:n)
+    topic (chave secundária de Publication_topics 1:n)
+
+- Comments: Comentários
+    id (chave primária)
+    comment
+    author (chave secundária de Users 1:n)
+    publication (chave secundária de Publications 1:n)
+
+- Favorites: Publicações favoritas do utilizadores (many to many: um utilizador pode ter vários favoritos e uma publicação pode ser favorita de muitos users)
+    publication (chave secundária de Publications) 
+    user (chave secundária de Users)

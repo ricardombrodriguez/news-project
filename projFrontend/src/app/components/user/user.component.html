@@ -1,0 +1,31 @@
+<form action="." method="post" [formGroup]="contactForm"  >
+    <!-- {% csrf_token %}
+    {% if user.group.description != "Gestor" or u.group.description != "Admin" %} -->
+            <div class="row">
+                <div class="col-8">
+                    <h3>{{ user.username }}</h3>
+                </div>
+            
+                <div class="col-3">
+                    <select formControlName="grupo" class="form-control" id="grupo" name="grupo">
+                        <option [ngValue]="user.group.description" selected="selected">
+                            {{ user.group.description }}</option>
+                        <ng-container *ngFor="let topic of groups" >
+                        <option *ngIf="topic.description != user.group.description" >{{topic.description}}</option>
+                        </ng-container>
+                
+                    </select>
+                </div>
+                <div class="col-1">
+                    <input type="hidden" name="user" value="{{ user.username }}">
+                    <button (click)="saveUser()" type="submit" name="Guardar" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-10">
+                    <h6> {{ user.first_name }} {{ user.last_name }}</h6>
+                </div>
+            </div>
+            <hr>
+    <!-- {% endif %} -->
+</form>

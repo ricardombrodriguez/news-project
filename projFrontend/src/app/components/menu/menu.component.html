@@ -1,0 +1,157 @@
+<!-- Navbar -->
+<nav *ngIf="loggedIn" class="main-header navbar navbar-expand navbar-white navbar-light">
+    <!-- Left navbar links -->
+    <!-- AQUI -->
+    <!-- Só aparece se o utilizador estiver logado -->
+
+    <ul *ngIf="loggedIn" class="navbar-nav">
+        
+    </ul>
+    <!-- Brand Logo -->
+    <a *ngIf="!loggedIn" routerLink="/" class="brand-link">
+        <span class="brand-text font-weight-bold"><b>Zer0Sense</b></span>
+    </a>
+
+    <!-- Right navbar links -->
+    <!-- AQUI -->
+    <!-- Se o utilizador não estiver logado aparece isto, se não aparece logout -->
+
+    <ul class="navbar-nav ml-auto">
+        <li *ngIf="!loggedIn" class="nav-item d-none d-sm-inline-block">
+            <a routerLink="/login" class="nav-link">Login</a>
+        </li>
+        <li *ngIf="!loggedIn" class="nav-item d-none d-sm-inline-block">
+            <a routerLink="/register" class="nav-link">Sign Up</a>
+        </li>
+        <li *ngIf="loggedIn" class="nav-item d-none d-sm-inline-block">
+            <a (click)="logout()" class="nav-link">Logout</a>
+        </li>
+    </ul>
+</nav>
+<nav *ngIf="!loggedIn" class="navbar navbar-expand navbar-dark navbar-light">
+
+    <!-- Left navbar links -->
+    <!-- AQUI -->
+    <!-- Só aparece se o utilizador estiver logado -->
+
+    <ul *ngIf="loggedIn" class="navbar-nav">
+        
+    </ul>
+    <!-- Brand Logo -->
+    <a *ngIf="!loggedIn" routerLink="/" class="brand-link">
+        <span class="brand-text font-weight-bold"><b>Zer0Sense</b></span>
+    </a>
+
+    <!-- Right navbar links -->
+    <!-- AQUI -->
+    <!-- Se o utilizador não estiver logado aparece isto, se não aparece logout -->
+
+    <ul class="navbar-nav ml-auto">
+
+        <li *ngIf="!loggedIn" class="nav-item d-none d-sm-inline-block">
+            <a routerLink="/login" class="nav-link">Login</a>
+        </li>
+        <li *ngIf="!loggedIn" class="nav-item d-none d-sm-inline-block">
+            <a routerLink="/register" class="nav-link">Sign Up</a>
+        </li>
+        <li *ngIf="loggedIn" class="nav-item d-none d-sm-inline-block">
+            <a (click)="logout()" class="nav-link">Logout</a>
+        </li>
+    </ul>
+
+</nav>
+<!-- /.navbar -->
+
+<!-- Main Sidebar Container -->
+<aside *ngIf="loggedIn" class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a routerLink="" class="brand-link">
+        <span class="brand-text font-weight-bold"><b>Zer0Sense</b></span>
+    </a>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Sidebar user panel (optional) -->
+        <div *ngIf="loggedIn" class="user-panel pt-3 d-flex">
+            <div class="info">
+                <!-- AQUI -->
+                <!-- pôr o nome do user -->
+                <p style="color: white;">Welcome, &nbsp;<strong>{{ username }}</strong></p>
+            </div>
+        </div>
+
+        <!-- Sidebar Menu -->
+        <!-- AQUI -->
+        <!-- Isto só aparece se o utilizador for autor ou gestor -->
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <!-- Add icons to the links using the .nav-icon class
+                with font-awesome or any other icon font library -->
+                <li class="nav-item">
+                    <a routerLink="/" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>
+                            Publications
+                        </p>
+                    </a>
+                </li>
+                <!-- {% if user.group.description != 'Leitor' %} -->
+                <li *ngIf="group != 'Leitor'" class="nav-item">
+                    <a routerLink="/my_publications" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>
+                            My Publications
+                        </p>
+                    </a>
+                </li>
+                <!-- {% endif %}
+            {% if request.user.is_authenticated %}-->
+                <li class="nav-item">
+                    <a routerLink="/favourites" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>
+                            Favourites
+                        </p>
+                    </a>
+                </li>
+                <!-- {%  endif %}-->
+                <!-- AQUI -->
+                <!-- Isto só aparece se o utilizador for gestor 
+                {% if user.group.description == 'Gestor' or user.group.description == 'Admin' %} -->
+                <li *ngIf="group == 'Gestor' || group == 'Admin' " class="nav-item">
+                    <a routerLink="/pendent_publications" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>
+                            Pendent Publications
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item" *ngIf="group == 'Gestor' || group == 'Admin' ">
+                    <a routerLink="/closed_publications" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>
+                            Closed Publications
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item" *ngIf="group == 'Gestor' || group == 'Admin' ">
+                    <a routerLink="/users" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>
+                            Manage Users
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item" *ngIf="group == 'Gestor' || group == 'Admin' ">
+                    <a routerLink="/topics" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>
+                            Manage Topics
+                        </p>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+</aside>

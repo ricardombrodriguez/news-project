@@ -1,0 +1,110 @@
+<app-menu></app-menu>
+
+<div class="wrapper">
+
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="mb-2">
+                    <h1 class="m-0">Manage users</h1>
+                </div>
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
+
+        <!-- Main content -->
+        <div class="content">
+            <div class="container-fluid">
+                <form action="" method="post" [formGroup]="topicForm">
+
+                    <div class="row">
+                        <div class="col-7">
+                            <div class="row">
+                                <div class="input-group mb-3 col-2">
+                                    <b>Username:</b>
+                                </div>
+                                <div class="col-10">
+                                    <input class="form-control" formControlName="username" type="text" id="username" name="username">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-5">
+                            <div class="row">
+                                <div class="input-group date col-2" data-target-input="nearest">
+                                    <b>Full Name:</b>
+                                </div>
+                                <div class="col-10">
+                                    <input class="form-control" formControlName="name" type="text" id="fullname" name="fullname">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- outra row para as queries -->
+                    <div class="row">
+                        <div class="col-7">
+                            <div class="row">
+                                <div class="input-group mb-3 col-2">
+                                    <b>Group:</b>
+                                </div>
+                                <div class="col-10">
+                                    <select formControlName="topic" class="form-control" id="topic" name="topic">
+                                        <option [ngValue]="null" >Select Topic</option>
+                                        <option *ngFor="let topic of topics" >{{topic.description}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-1">
+                            <button (click)="submit()" type="submit" class="btn btn-primary btn-sm" value><i
+                                    class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+
+                </form>
+
+                <div class="card card-default mt-3">
+                    <div class="card-body">
+                            <hr>
+                            <div *ngFor="let user of users">
+                                <app-user [groups]="topics" [user]="user">
+                                </app-user>
+                            </div>
+                            <p *ngIf="users.length ==0">No users</p>
+                    </div>
+                </div>
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+</div>
+
+<!-- REQUIRED SCRIPTS -->
+
+<!-- jQuery -->
+<script src="../static/AdminLTE-3.1.0/plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="../static/AdminLTE-3.1.0/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE -->
+<script src="../static/AdminLTE-3.1.0/dist/js/adminlte.js"></script>
+
+<!-- OPTIONAL SCRIPTS -->
+<script src="../static/AdminLTE-3.1.0/plugins/chart.js/Chart.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="../static/AdminLTE-3.1.0/dist/js/demo.js"></script>
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<script src="../static/AdminLTE-3.1.0/dist/js/pages/dashboard3.js"></script>
+<!-- date-range-picker -->
+<script src="../static/AdminLTE-3.1.0/plugins/daterangepicker/daterangepicker.js"></script>
+<script>
+    $(function () {
+        //Date picker
+        $('#reservationdate').datetimepicker({
+            format: 'L'
+        });
+    });
+</script>

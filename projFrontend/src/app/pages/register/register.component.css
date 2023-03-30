@@ -1,0 +1,23 @@
+input {
+    width: 90%;
+}
+
+.card {
+    width: 50%;
+    margin: auto;
+    text-align: left;
+    min-width: 600px;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 0 solid rgba(0,0,0,.125);
+    border-radius: 0.25rem;
+}
+
+.card-body {
+    -webkit-flex: 1 1 auto;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    min-width: 600px;
+    padding: 1.25rem;
+}

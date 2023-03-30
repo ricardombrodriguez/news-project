@@ -1,0 +1,3 @@
+O que pode ser criado/adicionado:
+
+Worker que é chamado quando é feito um POST de uma notícia com imagem. Este comprime a imagem para reduzir o tamanho da mesma.

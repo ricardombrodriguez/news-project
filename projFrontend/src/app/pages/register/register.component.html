@@ -1,0 +1,68 @@
+<body class="hold-transition register-page">
+    <div>
+        <div class="register-logo">
+            <a routerLink="/"><b>Zer0Sense</b></a>
+        </div>
+        <!-- /.login-logo -->
+        <div class="card">
+            <p class="login-box-msg" style="padding-top: 1.25rem;">Register to start your session</p>
+            <div>
+                <form method="POST" [formGroup]="registerForm">
+                    <div class="card-body login-card-body">
+                        <div class="form-group mb-3">
+                            <b>Username:</b>
+                            <div class="col-12 text-center">
+                                <input type="text" formControlName="username" id="username" class="input">
+                            </div>
+                        </div>
+                        <p *ngIf="showUsernameError" class="text-danger">Username is a required field</p>
+                        <p>Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</p>
+                        <div class="form-group mb-3">
+                            <b>First Name:</b>
+                            <div class="col-12 text-center">
+                                <input type="text" formControlName="first_name" id="firstname" class="input">
+                            </div>
+                        </div>
+                        <p *ngIf="showFirstNameError" class="text-danger">First Name is a required field</p>
+                        <div class="form-group mb-3">
+                            <b>Last Name:</b>
+                            <div class="col-12 text-center">
+                                <input type="text" formControlName="last_name" id="lastname" class="input">
+                            </div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <b>Password:</b>
+                            <div class="col-12 text-center">
+                                <input type="password" formControlName="password" id="password" class="input">
+                            </div>
+                        </div>
+                        <p *ngIf="showPasswordError" class="text-danger">Password is a required field</p>
+                        <ul>
+                            <li>Your password can’t be too similar to your other personal information.</li>
+                            <li>Your password must contain at least 8 characters.</li>
+                            <li>Your password can’t be a commonly used password.</li>
+                            <li>Your password can’t be entirely numeric.</li>
+                        </ul>
+                        <p>Enter the same password as before, for verification.</p>
+                        <div class="form-group mb-3">
+                            <b>Password confirmation:</b>
+                            <div class="col-12 text-center">
+                                <input type="password" formControlName="confirm_password" id="password2" class="input">
+                            </div>
+                        </div>
+                        <p *ngIf="showConfirmPasswordError" class="text-danger">Passwords are not equal</p>
+                        <div style="text-align: center;">
+                            <button style="position: center; width: 150px;" class="btn btn-primary" (click)="submit()"
+                                type="submit">Register</button>
+                        </div>
+                    </div>
+                    <!-- FAZER ATRIBUTO A ATRIBUTO PARA PODER METER CSS NISTO (EX: register_form.username) -->
+
+                </form>
+            </div>
+            <p class="text-center">If you already have an account, <a href="login">login</a> instead.</p>
+        </div>
+
+        <h3 *ngIf="showError" class="text-danger text-center">An error occurred while creating your account</h3>
+    </div>
+</body>
