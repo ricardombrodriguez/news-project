@@ -1,0 +1,70 @@
+
+<app-menu></app-menu>
+
+<div class="wrapper">
+
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="mb-2">
+                    <h1 class="m-0">Favourites</h1>
+                </div>
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
+
+        <!-- Main content -->
+        <div class="content">
+            <div class="container-fluid">
+                <app-search (submit)="getFormData($event)"></app-search>
+
+                <div class="card card-default mt-3">
+                    <div class="card-body">
+                        <p *ngIf="favourites.length>1" >Found {{favourites.length}} publications.</p>
+
+                        <p *ngIf="favourites.length==1" >Found {{favourites.length}} publication.</p>
+
+                            <hr>
+                            <div *ngFor="let favourite of favourites">
+                                <app-publication [publication]="favourite">
+                                </app-publication>
+                            </div>
+                            <p *ngIf="favourites.length==0" >No publications available.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+</div>
+
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+
+<!-- jQuery -->
+<script src="../static/AdminLTE-3.1.0/plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="../static/AdminLTE-3.1.0/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE -->
+<script src="../static/AdminLTE-3.1.0/dist/js/adminlte.js"></script>
+
+<!-- OPTIONAL SCRIPTS -->
+<script src="../static/AdminLTE-3.1.0/plugins/chart.js/Chart.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="../static/AdminLTE-3.1.0/dist/js/demo.js"></script>
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<script src="../static/AdminLTE-3.1.0/dist/js/pages/dashboard3.js"></script>
+<!-- date-range-picker -->
+<script src="../static/AdminLTE-3.1.0/plugins/daterangepicker/daterangepicker.js"></script>
+<script>
+    $(function () {
+        //Date picker
+        $('#reservationdate').datetimepicker({
+            format: 'L'
+        });
+    });
+</script>

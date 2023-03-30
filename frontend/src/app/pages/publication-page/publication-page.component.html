@@ -1,0 +1,164 @@
+<app-menu></app-menu>
+
+<div class="wrapper">
+
+    <div class="content-wrapper" [ngStyle]="{'margin-left': (!loggedIn) ? '0px' : ''}">
+
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="mb-2">
+                    <h1 class="m-0">{{ pub.title }}</h1>
+                </div>
+                <div class="mb-2">
+                    <div class="row">
+                        <div class="col-6">
+                            <span class="badge badge-warning">{{ pub.topic.description }}</span>
+                        </div>
+                        <div class="col-6 text-right">
+                            <p>{{ pub.created_on }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom: 2rem;">
+                    <!-- /.content-header -->
+                    <!-- {% if user.group.description == "Gestor" and pub.status.description == "Por Aprovar" %} -->
+                    <div *ngIf="(group=='Gestor' || group=='Admin') && pub.status.description=='Por Aprovar'" class="m-2 float-right">
+                        <form action="" method="post">
+                            <!-- {% csrf_token %} -->
+                            <input type="hidden" name="publication_aprov_id" value="{{ pub.id }}" />
+                            <button (click)="accept()" type="submit" class="btn btn-success btn-sm"><i class="fa fa-check"></i>
+                                Aceitar Publicação</button>
+                        </form>
+                    </div>
+                   
+                    <!-- {% endif %}
+                    {% if request.user.is_authenticated and not control and pub.status.description == "Aprovado"
+                    %} -->
+                    <div *ngIf="loggedIn && pub.status.description=='Aprovado' && !isFav"  class="m-2 float-right">
+                        <form action="" method="post">
+                            <!-- {% csrf_token %} -->
+                            <input type="hidden" name="add_favorito" value="{{ pub.id }}" />
+                            <button (click)="addFav()" type="submit" class="btn btn-warning btn-sm"><i class="fa fa-star"></i>
+                                Adicionar aos Favoritos</button>
+                        </form>
+                    </div>
+                    <!-- {% endif %}
+                    {% if request.user.is_authenticated and control and pub.status.description == "Aprovado" %} -->
+                    <div *ngIf="loggedIn && pub.status.description=='Aprovado' && isFav" class="m-2 float-right">
+                        <form action="" method="post">
+                            <!-- {% csrf_token %} -->
+                            <input type="hidden" name="tirar_favorito" value="{{ pub.id }}" />
+                            <button (click)="rmFav()" type="submit" class="btn btn-warning btn-sm"><i class="fa fa-star"></i>
+                                Tirar favorito</button>
+                        </form>
+                    </div>
+                    <!-- {% endif %}
+                    {% if user.group.description == "Gestor" and pub.status.description == "Por Aprovar" %} -->
+                    <div  *ngIf="loggedIn && (group=='Gestor' || group=='Admin') && pub.status.description=='Por Aprovar'" class="m-2 float-right">
+                        <form action="" method="post">
+                            <!-- {% csrf_token %} -->
+                            <input type="hidden" name="publication_arquivar" value="{{ pub.id }}" />
+                            <button (click)="arquivar()" type="submit" class="btn btn-success btn-sm">Arquivar Publicação</button>
+                        </form>
+                    </div>
+                    
+                    <div  *ngIf="loggedIn && (group=='Gestor' || group=='Admin') && pub.status.description=='Aprovado'" class="m-2 float-right">
+                        <form action="" method="post">
+                            <!-- {% csrf_token %} -->
+                            <input type="hidden" name="publication_arquivar" value="{{ pub.id }}" />
+                            <button (click)="arquivar()" type="submit" class="btn btn-success btn-sm">Arquivar Publicação</button>
+                        </form>
+                    </div>
+ 
+         
+                </div>
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- Main content -->
+        <div class="content">
+            <div class="container-fluid">
+                <div class="card card-default mt-3">
+                    <div class="card-body">
+                        <!-- o [innerHTML] permite apresentar HTML de forma segura -->
+                        <div [innerHTML]="pub.content"></div>
+                        <div class="float-right">
+                            <p>Autor: {{ pub.author.first_name }} {{ pub.author.last_name }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="pub.status.description=='Aprovado'" class="card card-default mt-3">
+                    <div class="card-body">
+                        <div class="timeline-item" *ngFor="let comment of comments">
+                            <app-comment [comment]="comment">
+                            </app-comment>
+                        </div>
+                        <!-- {% if error %} -->
+                        <p *ngIf="error" style="color: red">O comentário já foi submetido</p>
+                        <!-- {% endif %}
+                        {% if request.user.is_authenticated %} -->
+
+                        <div class="timeline">
+                            <div *ngIf="loggedIn">
+                                <i class="fas fa-comment bg-blue"></i>
+                                <div class="timeline-item">
+                                    <form action="" [formGroup]="contactForm" method="post">
+                                        <!-- {% csrf_token %} -->
+                                        <div class="timeline-body">
+                                            <!-- {{ form.content }} -->
+                                            <input class="form-control" formControlName="date" type="text" id="date" name="date" style="width: 100%">
+ 
+                                            <div class="mt-3 float-right text-right" style="width: 10%;">
+                                                <input (click)="sendComment()" type="submit" class="btn btn-primary btn-sm" 
+                                                    id="btn_submit" value="Enviar" />
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+
+<!-- jQuery -->
+<script src="../static/AdminLTE-3.1.0/plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="../static/AdminLTE-3.1.0/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE -->
+<script src="../static/AdminLTE-3.1.0/dist/js/adminlte.js"></script>
+
+<!-- OPTIONAL SCRIPTS -->
+<script src="../static/AdminLTE-3.1.0/plugins/chart.js/Chart.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="../static/AdminLTE-3.1.0/dist/js/demo.js"></script>
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<script src="../static/AdminLTE-3.1.0/dist/js/pages/dashboard3.js"></script>
+<!-- date-range-picker -->
+<script src="../static/AdminLTE-3.1.0/plugins/daterangepicker/daterangepicker.js"></script>
+<script>
+    $(function () {
+        //Date picker
+        $('#reservationdate').datetimepicker({
+            format: 'L'
+        });
+    });
+
+    function required1() {
+        var comment = document.getElementById("comment").value;
+        if (comment == "") {
+            document.getElementById("btn_submit").disabled = true;
+        } else {
+            document.getElementById("btn_submit").disabled = false;
+        }
+    }
+</script>

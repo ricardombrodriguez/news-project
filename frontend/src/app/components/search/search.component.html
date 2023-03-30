@@ -1,0 +1,57 @@
+<form action="" method="post" [formGroup]="contactForm" (ngSubmit)="tmp_submit()">
+    <div class="row">
+        <div class="col-8">
+            <div class="row">
+                <div class="col-2 input-group mb-3">
+                    <b>Title:</b>
+                </div>
+                <div class="col-10 float-right">
+                    <input formControlName="title" type="text" id="title" name="title" class="form-control">
+                </div>
+            </div>
+        </div>
+
+        <div class="col-3">
+            <div class="row">
+                <div class="input-group date col-2" data-target-input="nearest">
+                    <b>Date:</b>
+                </div>
+                <div class="col-10">
+                    <input formControlName="date" type="date" id="date" name="date" class="form-control">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-8">
+            <div class="row">
+                <div class="input-group mb-3 col-2">
+                    <b>Author:</b>
+                </div>
+                <div class="col-10">
+                    <input formControlName="author" type="text" id="author" name="author" class="form-control">
+                </div>
+            </div>
+        </div>
+
+        <div class="col-3">
+            <div class="row">
+                <div class="input-group mb-3 col-2">
+                    <b>Topic:</b>
+                </div>
+                <div class="col-10">
+                    <select formControlName="topic" class="form-control" id="topic" name="topic">
+                        <option [ngValue]="null" >Select Topic</option>
+                        <option *ngFor="let topic of topics" >{{topic.description}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-1">
+            <button type="submit" class="btn btn-primary btn-sm"><i
+                    class="fas fa-search"></i></button>
+        </div>
+    </div>
+
+</form>
