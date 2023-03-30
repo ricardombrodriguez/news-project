@@ -27,7 +27,7 @@ export class LoginService {
 
   getUserInfo = (username: string, token: string) => {
     return this.http.get(
-      this.baseUrl + "get_user?username=" + username,
+      this.baseUrl + "user/" + username,
       { 
         headers: new HttpHeaders({
           'Authorization': 'Token ' + token,

@@ -24,7 +24,7 @@ export class ClosedPublicationsComponent implements OnInit {
   }
 
   getClosedPublications(): void {
-    this.publicationsService.getClosedPublications().subscribe((publications) => {
+    this.publicationsService.getPublicationsByStatus("Archived").subscribe((publications) => {
       this.publications = publications;
     });
   }
@@ -74,7 +74,7 @@ export class ClosedPublicationsComponent implements OnInit {
       x=true;
     }
     if (x){
-      this.publicationsService.getSearchPublicationsFilled(this.author,this.date,this.topic,this.title).subscribe((publications) => {
+      this.publicationsService.getSearchPublicationsByStatus(this.author,this.date,this.topic,this.title,"Archived").subscribe((publications) => {
         this.publications = publications;
       });
     }

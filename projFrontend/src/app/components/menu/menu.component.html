@@ -81,7 +81,7 @@
 
         <!-- Sidebar Menu -->
         <!-- AQUI -->
-        <!-- Isto só aparece se o utilizador for autor ou gestor -->
+        <!-- Isto só aparece se o utilizador for Writer ou Moderator -->
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <!-- Add icons to the links using the .nav-icon class
@@ -94,8 +94,8 @@
                         </p>
                     </a>
                 </li>
-                <!-- {% if user.group.description != 'Leitor' %} -->
-                <li *ngIf="group != 'Leitor'" class="nav-item">
+                <!-- {% if user.group.description != 'Reader' %} -->
+                <li *ngIf="group != 'Reader'" class="nav-item">
                     <a routerLink="/my_publications" class="nav-link">
                         <i class="far fa-circle nav-icon"></i>
                         <p>
@@ -115,9 +115,9 @@
                 </li>
                 <!-- {%  endif %}-->
                 <!-- AQUI -->
-                <!-- Isto só aparece se o utilizador for gestor 
-                {% if user.group.description == 'Gestor' or user.group.description == 'Admin' %} -->
-                <li *ngIf="group == 'Gestor' || group == 'Admin' " class="nav-item">
+                <!-- Isto só aparece se o utilizador for Moderator 
+                {% if user.group.description == 'Moderator' or user.group.description == 'Admin' %} -->
+                <li *ngIf="group == 'Moderator' || group == 'Admin' " class="nav-item">
                     <a routerLink="/pendent_publications" class="nav-link">
                         <i class="far fa-circle nav-icon"></i>
                         <p>
@@ -125,7 +125,7 @@
                         </p>
                     </a>
                 </li>
-                <li class="nav-item" *ngIf="group == 'Gestor' || group == 'Admin' ">
+                <li class="nav-item" *ngIf="group == 'Moderator' || group == 'Admin' ">
                     <a routerLink="/closed_publications" class="nav-link">
                         <i class="far fa-circle nav-icon"></i>
                         <p>
@@ -133,7 +133,7 @@
                         </p>
                     </a>
                 </li>
-                <li class="nav-item" *ngIf="group == 'Gestor' || group == 'Admin' ">
+                <li class="nav-item" *ngIf="group == 'Moderator' || group == 'Admin' ">
                     <a routerLink="/users" class="nav-link">
                         <i class="far fa-circle nav-icon"></i>
                         <p>
@@ -141,7 +141,7 @@
                         </p>
                     </a>
                 </li>
-                <li class="nav-item" *ngIf="group == 'Gestor' || group == 'Admin' ">
+                <li class="nav-item" *ngIf="group == 'Moderator' || group == 'Admin' ">
                     <a routerLink="/topics" class="nav-link">
                         <i class="far fa-circle nav-icon"></i>
                         <p>

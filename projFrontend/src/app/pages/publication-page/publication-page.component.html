@@ -22,8 +22,8 @@
                 </div>
                 <div class="form-group" style="margin-bottom: 2rem;">
                     <!-- /.content-header -->
-                    <!-- {% if user.group.description == "Gestor" and pub.status.description == "Por Aprovar" %} -->
-                    <div *ngIf="(group=='Gestor' || group=='Admin') && pub.status.description=='Por Aprovar'" class="m-2 float-right">
+                    <!-- {% if user.group.description == "Moderator" and pub.status.description == "Pendent" %} -->
+                    <div *ngIf="(group=='Moderator' || group=='Admin') && pub.status.description=='Pendent'" class="m-2 float-right">
                         <form action="" method="post">
                             <!-- {% csrf_token %} -->
                             <input type="hidden" name="publication_aprov_id" value="{{ pub.id }}" />
@@ -33,9 +33,9 @@
                     </div>
                    
                     <!-- {% endif %}
-                    {% if request.user.is_authenticated and not control and pub.status.description == "Aprovado"
+                    {% if request.user.is_authenticated and not control and pub.status.description == "Approved"
                     %} -->
-                    <div *ngIf="loggedIn && pub.status.description=='Aprovado' && !isFav"  class="m-2 float-right">
+                    <div *ngIf="loggedIn && pub.status.description=='Approved' && !isFav"  class="m-2 float-right">
                         <form action="" method="post">
                             <!-- {% csrf_token %} -->
                             <input type="hidden" name="add_favorito" value="{{ pub.id }}" />
@@ -44,8 +44,8 @@
                         </form>
                     </div>
                     <!-- {% endif %}
-                    {% if request.user.is_authenticated and control and pub.status.description == "Aprovado" %} -->
-                    <div *ngIf="loggedIn && pub.status.description=='Aprovado' && isFav" class="m-2 float-right">
+                    {% if request.user.is_authenticated and control and pub.status.description == "Approved" %} -->
+                    <div *ngIf="loggedIn && pub.status.description=='Approved' && isFav" class="m-2 float-right">
                         <form action="" method="post">
                             <!-- {% csrf_token %} -->
                             <input type="hidden" name="tirar_favorito" value="{{ pub.id }}" />
@@ -54,8 +54,8 @@
                         </form>
                     </div>
                     <!-- {% endif %}
-                    {% if user.group.description == "Gestor" and pub.status.description == "Por Aprovar" %} -->
-                    <div  *ngIf="loggedIn && (group=='Gestor' || group=='Admin') && pub.status.description=='Por Aprovar'" class="m-2 float-right">
+                    {% if user.group.description == "Moderator" and pub.status.description == "Pendent" %} -->
+                    <div  *ngIf="loggedIn && (group=='Moderator' || group=='Admin') && pub.status.description=='Pendent'" class="m-2 float-right">
                         <form action="" method="post">
                             <!-- {% csrf_token %} -->
                             <input type="hidden" name="publication_arquivar" value="{{ pub.id }}" />
@@ -63,7 +63,7 @@
                         </form>
                     </div>
                     
-                    <div  *ngIf="loggedIn && (group=='Gestor' || group=='Admin') && pub.status.description=='Aprovado'" class="m-2 float-right">
+                    <div  *ngIf="loggedIn && (group=='Moderator' || group=='Admin') && pub.status.description=='Approved'" class="m-2 float-right">
                         <form action="" method="post">
                             <!-- {% csrf_token %} -->
                             <input type="hidden" name="publication_arquivar" value="{{ pub.id }}" />
@@ -83,11 +83,11 @@
                         <!-- o [innerHTML] permite apresentar HTML de forma segura -->
                         <div [innerHTML]="pub.content"></div>
                         <div class="float-right">
-                            <p>Autor: {{ pub.author.first_name }} {{ pub.author.last_name }}</p>
+                            <p>Writer: {{ pub.author.first_name }} {{ pub.author.last_name }}</p>
                         </div>
                     </div>
                 </div>
-                <div *ngIf="pub.status.description=='Aprovado'" class="card card-default mt-3">
+                <div *ngIf="pub.status.description=='Approved'" class="card card-default mt-3">
                     <div class="card-body">
                         <div class="timeline-item" *ngFor="let comment of comments">
                             <app-comment [comment]="comment">

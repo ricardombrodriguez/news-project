@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthenticationService {
+
   userId = new Subject<string | null>()
   private baseUrl = 'http://127.0.0.1:7007/ws/';
   curentUserId = localStorage.getItem('user_id')
@@ -24,7 +25,7 @@ export class AuthenticationService {
     );
 
     return this.http.post(
-      this.baseUrl + "create_user",
+      this.baseUrl + "user",
       body,
       {
         headers: new HttpHeaders({

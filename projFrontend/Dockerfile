@@ -1,6 +1,6 @@
 # stage 1
 
-FROM node:18-alpine AS build
+FROM node:18 AS build
 
 WORKDIR /app
 
@@ -20,7 +20,7 @@ WORKDIR /usr/share/nginx/html
 
 RUN rm -rf ./*
 
-COPY --from=build /app/dist/beegbrain .
+COPY --from=build /app/dist/projFrontend .
 
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
 

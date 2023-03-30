@@ -5,7 +5,7 @@
         {{ comment.comment }}
     </div>
 
-    <div *ngIf="group =='Gestor' || group == 'Admin'" class="timeline-footer" style="padding-bottom: 1.5rem;">
+    <div *ngIf="group =='Moderator' || group == 'Admin'" class="timeline-footer" style="padding-bottom: 1.5rem;">
         <div class="form-group">
             <div class="float-right" style="width: 10%;">
                 <form action="" method="post">
@@ -16,7 +16,7 @@
         </div>
     </div>
 
-    <div *ngIf="(group =='Leitor' || group == 'Autor') && comment.author.username== username" class="timeline-footer" style="padding-bottom: 1.5rem;">
+    <div *ngIf="(group =='Reader' || group == 'Writer') && comment.author.username== username" class="timeline-footer" style="padding-bottom: 1.5rem;">
         <div class="form-group">
             <div class="float-right" style="width: 10%;">
                 <form action="" method="post">

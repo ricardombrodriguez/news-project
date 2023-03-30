@@ -70,9 +70,9 @@ export class PublicationPageComponent implements OnInit {
   }
   accept(){
     console.log("accept")
-    //quero mudar o estado da publicação atual para Aprovado 
+    //quero mudar o estado da publicação atual para Approved 
     var tmp_pub = this.pub
-    const estados=this.pubStatusService.getOne("Aprovado").subscribe(
+    const estados=this.pubStatusService.getOne("Approved").subscribe(
       data => {
         var status = data
         tmp_pub.status=status
@@ -117,7 +117,7 @@ export class PublicationPageComponent implements OnInit {
   arquivar(){
     console.log("arquivar")
     var tmp_pub = this.pub
-    const estados=this.pubStatusService.getOne("Arquivado").subscribe(
+    const estados=this.pubStatusService.getOne("Archived").subscribe(
       data => {
         var status = data
         tmp_pub.status=status

@@ -23,16 +23,17 @@ export class ActivePublicationsComponent implements OnInit {
 
   ngOnInit(): void {
    
-    this.getActivePublications();
+    this.getApprovedPublications();
     console.log("aqui")
 
   }
 
-  getActivePublications(): void {
-    this.publicationsService.getActivePublications().subscribe((publications) => {
+  getApprovedPublications(): void {
+    this.publicationsService.getPublicationsByStatus("Approved").subscribe((publications) => {
       this.publications = publications;
     });
   }
+
   public getFormData(data:any):void {
     var x :boolean=false;
     if (data["topic"] !== undefined){
@@ -79,7 +80,7 @@ export class ActivePublicationsComponent implements OnInit {
       x=true;
     }
     if (x){
-      this.publicationsService.getSearchPublicationsApproved(this.author,this.date,this.topic,this.title).subscribe((publications) => {
+      this.publicationsService.getSearchPublicationsByStatus(this.author,this.date,this.topic,this.title,"Approved").subscribe((publications) => {
         this.publications = publications;
       });
     }

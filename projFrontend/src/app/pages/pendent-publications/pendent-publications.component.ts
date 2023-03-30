@@ -23,7 +23,7 @@ export class PendentPublicationsComponent implements OnInit {
   }
 
   getPendentPublications(): void {
-    this.publicationsService.getPendentPublications().subscribe((publications) => {
+    this.publicationsService.getPublicationsByStatus("Pendent").subscribe((publications) => {
       this.publications = publications;
     });
   }
@@ -73,7 +73,7 @@ export class PendentPublicationsComponent implements OnInit {
       x=true;
     }
     if (x){
-      this.publicationsService.getSearchPublicationsPendent(this.author,this.date,this.topic,this.title).subscribe((publications) => {
+      this.publicationsService.getSearchPublicationsByStatus(this.author,this.date,this.topic,this.title,"Pendent").subscribe((publications) => {
         this.publications = publications;
       });
     }

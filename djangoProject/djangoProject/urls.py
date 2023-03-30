@@ -29,11 +29,11 @@ urlpatterns = [
 
     # USER ENDPOINTS
     path('ws/user', views.create_user),
-    path('ws/user/<int:id>', views.update_user),
+    path('ws/user/<int:id>/', views.update_user),
     path('ws/users', views.get_users),
-    path('ws/users/search/group', views.get_users_by_group),
+    path('ws/users/search/group/<str:group>', views.get_users_by_group),
     path('ws/users/search', views.get_search_users),
-    path('ws/user/<int:id>', views.get_user),
+    path('ws/user/<int:id>/', views.get_user),
     path('ws/user/<str:username>', views.get_user_by_username),
     path('ws/user/search/likes', views.search_user_liked_publications),
     path('ws/user/likes', views.get_user_liked_publications),
@@ -43,41 +43,41 @@ urlpatterns = [
     path('ws/pubstatus', views.get_all_pub_status),
 
     # PUBLICATION TOPICS ENDPOINTS
-    path('ws/pubtopic/<int:id>', views.get_pub_topic),
+    path('ws/pubtopic/<int:id>/', views.get_pub_topic),
     path('ws/pubtopic/<str:description>', views.get_pub_topic_by_description),
     path('ws/pubtopics', views.get_pub_topics),
     path('ws/pubtopics/enabled', views.get_pub_topics_enabled),
     path('ws/pubtopic', views.get_pub_topics_create),
-    path('ws/pubtopic/<int:id>', views.get_pub_topics_update),
+    path('ws/pubtopic/<int:id>/', views.get_pub_topics_update),
     path('ws/pubtopic/<int:id>/disable', views.pub_topic_disable),
     path('ws/pubtopic/<int:id>/enable', views.pub_topic_enable),
 
     # PUBLICATION ENDPOINTS
     path('ws/publications', views.get_publications),
-    path('ws/publication/<int:id>', views.get_publication),
+    path('ws/publication/<int:id>/', views.get_publication),
     path('ws/publication', views.create_publication),
-    path('ws/publication/<int:id>', views.update_publication),
+    path('ws/publication/<int:id>/', views.update_publication),
     path('ws/publications/<str:status>', views.get_publication_by_status),
 
 
     # PUBLICATION ENDPOINTS (FILTERED)
-    path('ws/author/<str:username>/publications', views.get_author_publications),
-    path('ws/author/<str:username>/publications/<str:status>', views.get_author_publications_by_status),
-    path('ws/author/<str:username>/publications/search/<str:status>', views.get_author_searched_publications_by_status),
+    path('ws/author/publications', views.get_author_publications),
+    path('ws/author/publications/<str:status>', views.get_author_publications_by_status),
+    path('ws/author/publications/search/<str:status>', views.get_author_searched_publications_by_status),
     path('ws/publications/search/<str:status>', views.get_search_publications_by_status),
 
     # COMMENT ENDPOINTS
-    path('ws/comment/<int:id>', views.get_comment),
+    path('ws/comment/<int:id>/', views.get_comment),
     path('ws/comments', views.get_all_comments),
     path('ws/publication/<int:id>/comments', views.get_publication_comments),
     path('ws/comment', views.create_publication_comment),
-    path('ws/comment/<int:id>', views.delete_publication_comment),
+    path('ws/comment/<int:id>/', views.delete_publication_comment),
 
     # LIKE ENDPOINTS
-    path('ws/like/<int:id>', views.get_like),
+    path('ws/like/<int:id>/', views.get_like),
     path('ws/likes', views.get_likes),
     path('ws/publication/<int:id>/like', views.create_like),
-    path('ws/like/<int:id>', views.delete_like),
-    path('ws/publication/<int:id>/like/verify', views.verify_pub_like_by_user),
+    path('ws/like/<int:id>/', views.delete_like),
+    path('ws/publication/<int:pub_id>/like/verify', views.verify_pub_like_by_user),
 
 ]

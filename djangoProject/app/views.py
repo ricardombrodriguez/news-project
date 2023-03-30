@@ -43,7 +43,7 @@ def get_group_by_description(request):
     group = (request.GET['description'])
     ret = []
     for pub in groups:
-        if pub.description == group or (pub.description == "Admin" and group == "Gestor"):
+        if pub.description == group or (pub.description == "Admin" and group == "Moderator"):
             continue
         else:
             ret.append(pub)
@@ -56,11 +56,13 @@ def get_group_by_description(request):
 @api_view(['POST'])
 def create_user(request):
 
+    print(request.data)
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
         ret = serializer.create(request.data)
         token = TokenSerializer(data={'key': ret.key})
         return Response(token.initial_data)
+    print(serializer.errors)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -403,7 +405,7 @@ def get_search_users(request):
             filter(full_name__contains=name)
     ret=[]
     for user in users:
-        if user.group.description==group or (user.group.description=="Admin" and group=="Gestor"):
+        if user.group.description==group or (user.group.description=="Admin" and group=="Moderator"):
             continue
         else:
             ret.append(user)
@@ -412,13 +414,12 @@ def get_search_users(request):
 
 
 @api_view(['GET'])
-def get_users_by_group(request):
+def get_users_by_group(request, group):
 
-    group = (request.GET['group'])
     users = Users.objects.all()
     ret = []
     for user in users:
-        if user.group.description == group or (user.group.description=="Admin" and group=="Gestor"):
+        if user.group.description == group or (user.group.description=="Admin" and group=="Moderator"):
             continue
         else:
             ret.append(user)
@@ -434,10 +435,10 @@ def get_likes(request):
 
 
 @api_view(['GET'])
-def verify_pub_like_by_user(request, id):
+def verify_pub_like_by_user(request, pub_id):
 
     user_id = int(request.GET['user_id'])
-    pub = Publications.objects.get(id=id)
+    pub = Publications.objects.get(id=pub_id)
     author = Users.objects.get(id=user_id)
     try:
         ret=Favorites.objects.get(author=author,publication=pub)
@@ -479,10 +480,11 @@ def delete_like(request, id):
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def get_author_publications(request, username):
+def get_author_publications(request):
 
+    id = int(request.GET['id'])
     try:
-        author = Users.objects.get(username__exact=username)
+        author = Users.objects.get(id=id)
     except Users.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     publications= Publications.objects.all()
@@ -528,10 +530,11 @@ def get_search_publications_by_status(request, status):
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def get_author_searched_publications_by_status(request, username, status):
+def get_author_searched_publications_by_status(request, status):
 
+    id = int(request.GET['id'])
     try:
-        author = Users.objects.get(username__exact=username)
+        author = Users.objects.get(id=id)
     except Users.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     title = (request.GET['title'])
@@ -559,10 +562,11 @@ def get_author_searched_publications_by_status(request, username, status):
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def get_author_publications_by_status(request, username, status):
+def get_author_publications_by_status(request, status):
 
+    id = int(request.GET['id'])
     try:
-        author = Users.objects.get(username__exact=username)
+        author = Users.objects.get(id=id)
     except Users.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     publications = Publications.objects.all()
