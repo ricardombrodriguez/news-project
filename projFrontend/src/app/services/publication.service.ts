@@ -24,11 +24,11 @@ export class PublicationService {
     let token: string | null = localStorage.getItem('token')
   }
 
-  getPublication(id : number): Observable<Publication> {
+  getPublication(id: number): Observable<Publication> {
     return this.http.get<Publication>(this.baseUrl + 'publication/' + id + '/');
   }
 
-  createPublication(form : FormGroup, topics : Publication_Topics[], token : string): Observable<Publication> {
+  createPublication(form: FormGroup, topics: Publication_Topics[], token: string): Observable<Publication> {
 
     let publication: Publication = new Publication;
     topics.forEach(element => {
@@ -45,7 +45,7 @@ export class PublicationService {
     publication.content = form.value.content;
     publication.author = this.user;
 
-    return this.http.post<Publication>(this.baseUrl + 'publication', publication,  { 
+    return this.http.post<Publication>(this.baseUrl + 'publication', publication, {
       headers: new HttpHeaders({
         'Authorization': 'Token ' + token,
         'Content-Type': 'application/json',
@@ -55,23 +55,23 @@ export class PublicationService {
   }
 
 
-  getPublicationsByStatus(status : string): Observable<Publication[]> {
+  getPublicationsByStatus(status: string): Observable<Publication[]> {
     return this.http.get<Publication[]>(this.baseUrl + 'publications/' + status);
   }
 
-  getUserPublicationsByStatus(id: number, token:string, status:string): Observable<Publication[]> {
-    return this.http.get<Publication[]>(this.baseUrl + 'author/publications/' + status + "?id=" + id, 
-    { 
-      headers: new HttpHeaders({
-        'Authorization': 'Token ' + token,
-        'Content-Type': 'application/json',
-      }),
-    }
+  getUserPublicationsByStatus(id: number, token: string, status: string): Observable<Publication[]> {
+    return this.http.get<Publication[]>(this.baseUrl + 'author/publications/' + status + "?id=" + id,
+      {
+        headers: new HttpHeaders({
+          'Authorization': 'Token ' + token,
+          'Content-Type': 'application/json',
+        }),
+      }
     );
   }
 
-  getFavouritePublicationsByUser(id: number,token:string): Observable<Publication[]> {
-    return this.http.get<Publication[]>(this.baseUrl + 'user/likes?id=' + id,{ 
+  getFavouritePublicationsByUser(id: number, token: string): Observable<Publication[]> {
+    return this.http.get<Publication[]>(this.baseUrl + 'user/likes/?id=' + id, {
       headers: new HttpHeaders({
         'Authorization': 'Token ' + token,
         'Content-Type': 'application/json',
@@ -84,8 +84,8 @@ export class PublicationService {
   }
 
 
-  getSearchPublicationsByStatusAndUser(id: number, date: string, topic: string, title: string,token:string, status:string): Observable<Publication[]> {
-    return this.http.get<Publication[]>(this.baseUrl + 'author/publications/search/' + status + '?id=' + id + '&&date=' + date + '&&topic=' + topic + '&&title=' + title,{ 
+  getSearchPublicationsByStatusAndUser(id: number, date: string, topic: string, title: string, token: string, status: string): Observable<Publication[]> {
+    return this.http.get<Publication[]>(this.baseUrl + 'author/publications/search/' + status + '?id=' + id + '&&date=' + date + '&&topic=' + topic + '&&title=' + title, {
       headers: new HttpHeaders({
         'Authorization': 'Token ' + token,
         'Content-Type': 'application/json',
@@ -94,8 +94,8 @@ export class PublicationService {
   }
 
 
-  getSearchPublicationsApprovedFavorite(id: number, author: string, date: string, topic: string, title: string,token:string): Observable<Publication[]> {
-    return this.http.get<Publication[]>(this.baseUrl + 'user/search/likes?id=' + id + '&&author=' + author + '&&date=' + date + '&&topic=' + topic + '&&title=' + title,{ 
+  getSearchPublicationsApprovedFavorite(id: number, author: string, date: string, topic: string, title: string, token: string): Observable<Publication[]> {
+    return this.http.get<Publication[]>(this.baseUrl + 'user/search/likes?id=' + id + '&&author=' + author + '&&date=' + date + '&&topic=' + topic + '&&title=' + title, {
       headers: new HttpHeaders({
         'Authorization': 'Token ' + token,
         'Content-Type': 'application/json',
@@ -103,9 +103,9 @@ export class PublicationService {
     });
   }
 
-  updatePublication(publication: Publication,token:string): Observable<any> {
-    const url = this.baseUrl + 'publication/' + publication.id + '/'
-    return this.http.put(url, publication, { 
+  updatePublication(publication: Publication, token: string): Observable<any> {
+    const url = this.baseUrl + 'publication/' + publication.id
+    return this.http.put(url, publication, {
       headers: new HttpHeaders({
         'Authorization': 'Token ' + token,
         'Content-Type': 'application/json',

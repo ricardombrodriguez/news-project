@@ -37,19 +37,19 @@ export class ManageUsersComponent implements OnInit {
       this.users = users;
     })
   }
+
   getTopics() {
-    return this.userService.get_groupDescription(this.token,this.group).subscribe((data) => {
+    return this.userService.getGroups(this.token).subscribe((data) => {
       this.topics = data;
-      console.log("AQUI")
     })
   }
+
   submit(){
     var data=this.topicForm.value
     var topic_description=data["topic"]
     var name=data["name"]
     var username=data["username"]
     this.group=''+localStorage.getItem("group")
-    
     this.userService.getUsersSearch(topic_description,this.group,name,username).subscribe(data => {
       this.users=data
     });

@@ -601,17 +601,13 @@ def get_user_liked_publications(request):
         author = Users.objects.get(id=id)
     except Users.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
-    favoritos = Favorites.objects.all()
+    favoritos = Favorites.objects.filter(author=author)
     ret = []
-    for publication in favoritos:
-        if publication.author == author  and publication.publication.status.description=="Approved":
-            ret.append(publication.publication)
+    for fav in favoritos:
+        if fav.publication.status.description == "Approved":
+            ret.append(fav.publication)
     serializer = PublicationsSerializer(ret, many=True)
     return Response(serializer.data)
-
-
-
-
 
 
 

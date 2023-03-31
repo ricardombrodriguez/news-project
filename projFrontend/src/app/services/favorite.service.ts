@@ -26,7 +26,7 @@ export class FavoriteService {
 
   }
   deleteFavorite(fav : Favorite, token : string): Observable<any>{
-    return this.http.delete<Favorite>(this.baseUrl + 'like/' + fav.id + '/', { 
+    return this.http.delete<Favorite>(this.baseUrl + 'like/' + fav.id  + '/', { 
       headers: new HttpHeaders({
         'Authorization': 'Token ' + token,
         'Content-Type': 'application/json',

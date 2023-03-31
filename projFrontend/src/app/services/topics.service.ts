@@ -41,7 +41,7 @@ export class TopicsService {
   updateTopic(topic: Publication_Topics, description: string,token:string): Observable<any> {
 
     topic.description = description;
-    return this.http.put(this.baseUrl + 'pubtopic/' + topic.id+ '/', topic, { 
+    return this.http.put(this.baseUrl + 'pubtopic/' + topic.id + '/', topic, { 
       headers: new HttpHeaders({
         'Authorization': 'Token ' + token,
         'Content-Type': 'application/json',
