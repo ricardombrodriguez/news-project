@@ -44,7 +44,8 @@
                                     <div class="row">
                                         <div class="col-12">
                                             <!-- {{form.content}} -->
-                                                
+                                            <angular-editor [placeholder]="'Enter text here...'" formControlName="content" [config]="editorConfig">
+                                            </angular-editor>  
                                         </div>
                                     </div>
                                 </div>

@@ -1,5 +1,6 @@
 <!-- Navbar -->
 <nav *ngIf="loggedIn" class="main-header navbar navbar-expand navbar-white navbar-light">
+    
     <!-- Left navbar links -->
     <!-- AQUI -->
     <!-- Só aparece se o utilizador estiver logado -->
@@ -9,7 +10,7 @@
     </ul>
     <!-- Brand Logo -->
     <a *ngIf="!loggedIn" routerLink="/" class="brand-link">
-        <span class="brand-text font-weight-bold"><b>Zer0Sense</b></span>
+        <span class="brand-text font-weight-bold"><b>NEWS</b></span>
     </a>
 
     <!-- Right navbar links -->
@@ -66,7 +67,7 @@
 <aside *ngIf="loggedIn" class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a routerLink="" class="brand-link">
-        <span class="brand-text font-weight-bold"><b>Zer0Sense</b></span>
+        <span class="brand-text font-weight-bold"><b>NEWS</b></span>
     </a>
     <!-- Sidebar -->
     <div class="sidebar">
