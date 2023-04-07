@@ -10,8 +10,12 @@ RUN pip3 install -r requirements.txt
 
 COPY . /projBackend/
 
+ENV DJANGO_SUPERUSER_USERNAME=admin4
+ENV DJANGO_SUPERUSER_EMAIL=admin@example.com
+ENV DJANGO_SUPERUSER_PASSWORD=admin
+
 EXPOSE 8000
 
-RUN python3 manage.py makemigrations app && python3 manage.py migrate
+RUN python3 manage.py makemigrations app && python3 manage.py migrate && python3 manage.py createsuperuser2 --no-input 
 
 ENTRYPOINT [ "python3", "manage.py", "runserver", "8000" ]
