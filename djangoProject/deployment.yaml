@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: app
-        image: thescorpoi/gic:v1
+        image: thescorpoi/gic:v2
         resources:
           requests:
             memory: "32Mi"
