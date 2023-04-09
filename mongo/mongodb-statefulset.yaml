@@ -19,6 +19,11 @@ spec:
           image: mongo:4.0.17
           ports:
             - containerPort: 27017
+          command:
+            - mongod
+            - "--bind_ip_all"
+            - "--replSet"
+            - "rs0"
           volumeMounts:
             - name: pvc
               mountPath: /data/db
