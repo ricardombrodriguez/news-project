@@ -50,12 +50,21 @@ Os estados poderão ser alterados ou poderão ser adicionados mais, do lado do d
 - A única diferença entre este e o administrador é que este não tem permissão para gerir utilizadores 'Admin', uma vez que este encontra-se abaixo deste na hierarquia de autorização.
 
 
-
-
-
 ### Logins:
 
 - (completar depois)
+
+
+### Deployment
+
+```
+minikube start          # test locally
+chmod 777 apply-k8s.sh
+./apply-k8s.sh
+```
+
+
+
 
 
 ## Autores:
