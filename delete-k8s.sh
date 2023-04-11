@@ -22,3 +22,12 @@ cd ../redis
 kubectl delete -f redis-configmap.yaml
 kubectl delete -f redis-statefulset.yaml
 kubectl delete -f redis-svc.yaml
+
+# ============ ANGULAR / FRONTEND =============== #
+cd ../traefik
+kubectl delete -f traefik-cluster-role.yaml
+kubectl delete -f traefik-service-account.yaml
+kubectl delete -f traefik-cluster-role-service-binding.yaml
+kubectl delete -f traefik-deployment.yaml
+kubectl delete -f traefik-services.yaml
+kubectl delete -f traefik-ingress.yaml
