@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: ricardombrodriguez/gic-angular:v1  
+        image: registry.deti:5000/gic-group-6/frontend:v1  
         resources:
           requests:
             memory: "32Mi"
