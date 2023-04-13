@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: mongodb
+  namespace: gic-group-6
 spec:
   serviceName: mongodb
   replicas: 3
@@ -33,6 +34,7 @@ spec:
       spec:
         accessModes:  
           - ReadWriteOnce
+        storageClassName: longhorn
         resources:
           requests:
             storage: 1Gi

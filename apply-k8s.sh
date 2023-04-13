@@ -6,7 +6,6 @@ cd ./redis
 kubectl apply -f redis-configmap.yaml 
 kubectl apply -f redis-statefulset.yaml 
 kubectl apply -f redis-svc.yaml
-./activate-redis-cluster.sh
 
 # =================== MONGODB =================== #
 cd ../mongo
@@ -31,3 +30,9 @@ kubectl apply -f traefik-cluster-role-service-binding.yaml
 kubectl apply -f traefik-deployment.yaml
 kubectl apply -f traefik-services.yaml
 kubectl apply -f traefik-ingress.yaml
+
+
+# ============== CONFIG REDIS CLUSTER =================
+# Note: Do this after some time, the pods need to be assigned to the cluster nodes
+
+# ./activate-redis-cluster.sh

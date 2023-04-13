@@ -2,7 +2,7 @@ kind: Deployment
 apiVersion: apps/v1
 metadata:
   name: traefik-deployment
-  namespace: default    # mudar
+  namespace: gic-group-6
   labels:
     app: traefik
 spec:

@@ -4,6 +4,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: redis-config-map
+  namespace: gic-group-6
 data:
   # update-node-sh -> Updates redis cluster conf. file with IP address of the pod and execute redis proccess (happens when pod is (re)started )
   update-node.sh: |

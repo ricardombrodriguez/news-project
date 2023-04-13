@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend
+  namespace: gic-group-6
 spec:
   replicas: 1
   selector:

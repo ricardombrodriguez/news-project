@@ -2,12 +2,12 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: traefik-ingress
-  namespace: default
+  namespace: gic-group-6
   annotations:
     kubernetes.io/ingress.class: traefik
 spec:
   rules:
-  - host: news.app
+  - host: gic-group-6.k3s
     http:
       paths:
       - path: /

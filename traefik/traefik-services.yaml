@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: traefik-dashboard-service
+  namespace: gic-group-6
 spec:
   type: LoadBalancer
   ports:
