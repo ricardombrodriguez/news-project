@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: thescorpoi/gic:v2
+        image: registry.deti:5000/gic-group-6/backend:v1
         resources:
           requests:
             memory: "32Mi"
