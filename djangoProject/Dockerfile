@@ -18,4 +18,4 @@ EXPOSE 8000
 
 RUN python3 manage.py makemigrations app && python3 manage.py migrate && python3 manage.py createsuperuser2 --no-input 
 
-ENTRYPOINT [ "python3", "manage.py", "runserver", "8000" ]
+ENTRYPOINT [ "python3", "manage.py", "runserver", "0.0.0.0:8000" ]
