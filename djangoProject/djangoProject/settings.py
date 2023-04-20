@@ -84,8 +84,16 @@ WSGI_APPLICATION = 'djangoProject.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'djongo',
+        'NAME': 'thenews',  # Replace this with your MongoDB database name
+        'CLIENT': {
+            'host': 'localhost',  # Replace this with your MongoDB host (e.g., 'localhost', 'mongodb://127.0.0.1/')
+            'port': 6000,  # Replace this with your MongoDB port (e.g., 27017)
+            'username': 'admin',  # Uncomment and replace this with your MongoDB username if required
+            'password': 'password123',  # Uncomment and replace this with your MongoDB password if required
+            # 'authSource': 'your-auth-db',  # Uncomment and replace this with your MongoDB authentication database if required
+            # 'authMechanism': 'SCRAM-SHA-1',  # Uncomment and replace this with your MongoDB authentication mechanism if required
+        },
     }
 }
 
