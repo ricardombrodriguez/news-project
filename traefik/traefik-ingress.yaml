@@ -27,3 +27,23 @@ spec:
             name: backend-svc
             port: 
               number: 8000
+  - host: prometheus.group-6.k3s
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: prometheus-service
+            port: 
+              number: 8080
+  - host: grafana.group-6.k3s
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: grafana
+            port: 
+              number: 3000

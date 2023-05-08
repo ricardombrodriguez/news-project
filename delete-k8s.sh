@@ -13,7 +13,8 @@ kubectl delete -f django-svc.yaml
 
 # =================== MONGODB =================== #
 cd ../mongo
-kubectl delete -f mongodb-statefulset.yaml
+kubectl delete -f mongodb-statefulset-master.yaml
+kubectl delete -f mongodb-statefulset-replicas.yaml
 kubectl delete -f mongodb-svc.yaml
 
 

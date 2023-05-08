@@ -1,0 +1,99 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb
+  namespace: gic-group-6
+spec:
+  type: ClusterIP
+  clusterIP: None
+  selector:
+    app: mongodb
+  ports:
+  - name: mongodb
+    port: 27017
+    targetPort: 27017
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongo-config
+  namespace: gic-group-6
+data:
+  script.sh: |-
+    #!/bin/bash
+    echo -e $POD_NAME
+    if [[ "$POD_NAME" == "mongodb-0" ]]; then
+      export MONGODB_REPLICA_SET_MODE="primary"
+      export MONGODB_ROOT_PASSWORD="secret"
+    else
+      export MONGODB_REPLICA_SET_MODE="secondary"
+      export MONGODB_INITIAL_PRIMARY_PORT_NUMBER="27017"
+      export MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD="secret"
+    fi
+    echo -e $MONGODB_REPLICA_SET_MODE
+    exec /opt/bitnami/scripts/mongodb/entrypoint.sh /opt/bitnami/scripts/mongodb/run.sh
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongodb
+  namespace: gic-group-6
+spec:
+  serviceName: mongodb
+  selector:
+    matchLabels:
+      app: mongodb
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      securityContext:
+        fsGroup: 1001
+      containers:
+        - name: mongodb
+          image: bitnami/mongodb:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+          - containerPort: 27017
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: MONGODB_REPLICA_SET_NAME
+              value: "replicaset"
+            - name: MONGODB_INITIAL_PRIMARY_HOST
+              value: "mongodb-0.mongodb.gic-group-6.svc.cluster.local"
+            - name: MONGODB_ADVERTISED_HOSTNAME
+              value: "$(POD_NAME).mongodb.gic-group-6.svc.cluster.local"
+            - name: MONGODB_REPLICA_SET_KEY
+              value: "verysecret"
+          command:
+            - /scripts/script.sh
+          securityContext:
+            runAsUser: 1001
+          volumeMounts:
+            - name: config
+              mountPath: /scripts
+            - name: mongodb-data
+              mountPath: /bitnami/mongodb
+      volumes:
+        - name: config
+          configMap:
+            name: mongo-config
+            defaultMode: 0755
+            items:
+              - key: script.sh
+                path: script.sh
+  volumeClaimTemplates:
+    - metadata:
+        name: mongodb-data
+        namespace: gic-group-6
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: longhorn
+        resources:
+          requests:
+            storage: 1Gi

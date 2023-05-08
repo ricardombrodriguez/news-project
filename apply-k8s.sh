@@ -9,7 +9,8 @@ kubectl apply -f redis-svc.yaml
 
 # =================== MONGODB =================== #
 cd ../mongo
-kubectl apply -f mongodb-statefulset.yaml
+kubectl apply -f mongodb-statefulset-master.yaml
+kubectl apply -f mongodb-statefulset-replicas.yaml
 kubectl apply -f mongodb-svc.yaml
 
 # ============= DJANGO / BACKEND ================ #

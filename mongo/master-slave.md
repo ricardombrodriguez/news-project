@@ -8,3 +8,7 @@ rs.initiate(
   ]
 }
 )
+
+
+
+To enable free monitoring, run the following command: db.enableFreeMonitoring()
