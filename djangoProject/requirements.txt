@@ -1,5 +1,5 @@
 django-cors-headers
 django_rest_framework
-django
+django==3.1.0
 decouple
-djongo==1.3.6
+djongo
