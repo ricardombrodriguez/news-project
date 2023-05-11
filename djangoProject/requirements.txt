@@ -2,3 +2,4 @@ django-cors-headers
 django_rest_framework
 django
 decouple
+djongo==1.3.6

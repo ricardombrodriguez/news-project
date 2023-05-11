@@ -27,6 +27,7 @@ SECRET_KEY = 'django-insecure-6qq04o7e_(p!2^x8*+-s2gr%i=#rt8%92+d3yy)9w0uf51q=w!
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    'localhost',
     'django.gic-group-6.k3s'
 ]
 
@@ -43,7 +44,8 @@ INSTALLED_APPS = [
     'app.apps.AppConfig',
     'rest_framework',
     'corsheaders',
-    'rest_framework.authtoken'
+    'rest_framework.authtoken',
+    'djongo'
 ]
 
 MIDDLEWARE = [
@@ -84,11 +86,18 @@ WSGI_APPLICATION = 'djangoProject.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'djongo',
+        'NAME': 'news',
+        'ENFORCE_SCHEMA': False,
+        'CLIENT': {
+            'host': 'mongodb.default.svc.cluster.local',
+            'port': 27017,
+            'username': 'myuser',
+            'password': 'mypassword',
+            'authSource': 'admin',
+        }
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

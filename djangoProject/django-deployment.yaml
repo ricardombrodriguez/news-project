@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: registry.deti:5000/gic-group-6/backend:v1
+        image: thescorpoi/gic:v2 #registry.deti:5000/gic-group-6/backend:v1
         resources:
           requests:
             memory: "32Mi"
@@ -30,3 +30,10 @@ spec:
             cpu: "500m"
         ports:
         - containerPort: 8000
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: kubernetes.io/hostname
+        whenUnsatisfiable: ScheduleAnyway
+        labelSelector:
+          matchLabels:
+            type: redis-cluster 

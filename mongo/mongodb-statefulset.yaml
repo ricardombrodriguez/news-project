@@ -27,6 +27,13 @@ spec:
           volumeMounts:
             - name: pvc
               mountPath: /data/db
+  topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          type: redis-cluster 
   volumeClaimTemplates:
     - metadata:
         name: pvc
@@ -38,3 +45,4 @@ spec:
         resources:
           requests:
             storage: 1Gi
+    

@@ -35,3 +35,10 @@ spec:
           limits:
             cpu: "1"
             memory: "512Mi"
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              type: redis-cluster    

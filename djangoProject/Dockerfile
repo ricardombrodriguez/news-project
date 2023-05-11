@@ -16,6 +16,6 @@ ENV DJANGO_SUPERUSER_PASSWORD=admin
 
 EXPOSE 8000
 
-RUN python3 manage.py makemigrations app && python3 manage.py migrate && python3 manage.py createsuperuser2 --no-input 
+RUN python3 manage.py makemigrations app && python3 manage.py migrate && python3 manage.py createsuperuser --no-input 
 
 ENTRYPOINT [ "python3", "manage.py", "runserver", "0.0.0.0:8000" ]

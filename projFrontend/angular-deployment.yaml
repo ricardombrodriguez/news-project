@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: registry.deti:5000/gic-group-6/frontend:v1  
+        image: ricardombrodriguez/gic-angular:v1   #registry.deti:5000/gic-group-6/frontend:v1  
         resources:
           requests:
             memory: "32Mi"
@@ -30,3 +30,10 @@ spec:
             cpu: "500m"
         ports:
         - containerPort: 80
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              type: redis-cluster    
