@@ -99,6 +99,13 @@ spec:
             items:
               - key: script.sh
                 path: script.sh
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              type: redis-cluster 
   volumeClaimTemplates:
     - metadata:
         name: mongodb-data
