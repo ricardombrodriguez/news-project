@@ -3,3 +3,4 @@ django_rest_framework
 django==3.1.0
 decouple
 djongo
+pymongo==3.11.4

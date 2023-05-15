@@ -30,3 +30,20 @@ spec:
             cpu: "500m"
         ports:
         - containerPort: 8000
+      initContainers:
+      - name: init-django
+        image: registry.deti:5000/gic-group-6/backend:v1
+        command: 
+          - "/bin/sh"
+          - "-c"
+          - |
+            python manage.py makemigrations app &&
+            python manage.py migrate &&
+            python manage.py createsuperuser2 --noinput 
+        env:
+          - name: DJANGO_SUPERUSER_USERNAME
+            value: "admin"
+          - name: DJANGO_SUPERUSER_EMAIL
+            value: "admin@example.com"
+          - name: DJANGO_SUPERUSER_PASSWORD
+            value: "admin_password"

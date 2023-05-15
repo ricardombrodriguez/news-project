@@ -27,7 +27,9 @@ SECRET_KEY = 'django-insecure-6qq04o7e_(p!2^x8*+-s2gr%i=#rt8%92+d3yy)9w0uf51q=w!
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'django.gic-group-6.k3s'
+    'django.gic-group-6.k3s',
+    'localhost',
+    '127.0.0.1'
 ]
 
 
@@ -43,6 +45,7 @@ INSTALLED_APPS = [
     'app.apps.AppConfig',
     'rest_framework',
     'corsheaders',
+    'djongo',
     'rest_framework.authtoken'
 ]
 
@@ -85,17 +88,19 @@ WSGI_APPLICATION = 'djangoProject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
-        'NAME': 'thenews',  # Replace this with your MongoDB database name
+        'NAME': 'thenews',
         'CLIENT': {
-            'host': 'localhost',  # Replace this with your MongoDB host (e.g., 'localhost', 'mongodb://127.0.0.1/')
-            'port': 6000,  # Replace this with your MongoDB port (e.g., 27017)
-            'username': 'admin',  # Uncomment and replace this with your MongoDB username if required
-            'password': 'password123',  # Uncomment and replace this with your MongoDB password if required
-            # 'authSource': 'your-auth-db',  # Uncomment and replace this with your MongoDB authentication database if required
-            # 'authMechanism': 'SCRAM-SHA-1',  # Uncomment and replace this with your MongoDB authentication mechanism if required
+            'host': 'mongodb',
+            'port': 27017,
+            'username': 'admin',
+            'password': 'password123',
+            'authSource': 'admin',
+            'authMechanism': 'SCRAM-SHA-1',
         },
     }
 }
+
+
 
 
 # Password validation
