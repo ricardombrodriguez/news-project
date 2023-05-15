@@ -13,13 +13,14 @@ kubectl delete -f django-svc.yaml
 
 # =================== MONGODB =================== #
 cd ../mongo
-kubectl delete -f mongodb-statefulset-master.yaml
-kubectl delete -f mongodb-statefulset-replicas.yaml
+kubectl delete -f mongodb-secrets.yaml
+kubectl delete -f mongodb-statefulset.yaml
 kubectl delete -f mongodb-svc.yaml
 
 
 # =================== REDIS =================== #
 cd ../redis
+kubectl delete -f redis-secrets.yaml
 kubectl delete -f redis-configmap.yaml
 kubectl delete -f redis-statefulset.yaml
 kubectl delete -f redis-svc.yaml

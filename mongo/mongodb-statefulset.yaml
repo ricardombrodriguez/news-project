@@ -1,19 +1,4 @@
 apiVersion: v1
-kind: Service
-metadata:
-  name: mongodb
-  namespace: gic-group-6
-spec:
-  type: ClusterIP
-  clusterIP: None
-  selector:
-    app: mongodb
-  ports:
-  - name: mongodb
-    port: 27017
-    targetPort: 27017
----
-apiVersion: v1
 kind: ConfigMap
 metadata:
   name: mongo-config
@@ -24,11 +9,15 @@ data:
     echo -e $POD_NAME
     if [[ "$POD_NAME" == "mongodb-0" ]]; then
       export MONGODB_REPLICA_SET_MODE="primary"
-      export MONGODB_ROOT_PASSWORD="secret"
+      export MONGODB_ROOT_USER=$MRU
+      export MONGODB_ROOT_PASSWORD=$MRP
+      export MONGODB_USER=$MU
+      export MONGODB_PASSWORD=$MP
+      export MONGODB_DATABASE="gicdb"
     else
       export MONGODB_REPLICA_SET_MODE="secondary"
       export MONGODB_INITIAL_PRIMARY_PORT_NUMBER="27017"
-      export MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD="secret"
+      export MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD=$MRP
     fi
     echo -e $MONGODB_REPLICA_SET_MODE
     exec /opt/bitnami/scripts/mongodb/entrypoint.sh /opt/bitnami/scripts/mongodb/run.sh
@@ -62,14 +51,37 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
+            - name: MRU
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: root_username
+            - name: MRP
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: root_password
+            - name: MU
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: username
+            - name: MP
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: password
             - name: MONGODB_REPLICA_SET_NAME
               value: "replicaset"
             - name: MONGODB_INITIAL_PRIMARY_HOST
-              value: "mongodb-0.mongodb.gic-group-6.svc.cluster.local"
+              value: "mongodb-0.mongodb.prof.svc.cluster.local"
             - name: MONGODB_ADVERTISED_HOSTNAME
-              value: "$(POD_NAME).mongodb.gic-group-6.svc.cluster.local"
+              value: "$(POD_NAME).mongodb.prof.svc.cluster.local"
             - name: MONGODB_REPLICA_SET_KEY
-              value: "verysecret"
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: replicate_key
           command:
             - /scripts/script.sh
           securityContext:
@@ -87,6 +99,13 @@ spec:
             items:
               - key: script.sh
                 path: script.sh
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              type: mongodb
   volumeClaimTemplates:
     - metadata:
         name: mongodb-data

@@ -1,4 +1,3 @@
-
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -32,6 +31,16 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: status.podIP
+        - name: REDIS_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: redis-secret
+              key: redis-username
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: redis-secret
+              key: redis-password
         volumeMounts:
         - name: conf
           mountPath: /conf
@@ -44,6 +53,13 @@ spec:
         configMap:
           name: redis-config-map
           defaultMode: 0755
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              type: redis-cluster    
   volumeClaimTemplates:
   - metadata:
       name: data

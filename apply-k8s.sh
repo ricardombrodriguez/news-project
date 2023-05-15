@@ -3,14 +3,15 @@
 
 # =================== REDIS =================== #
 cd ./redis
+kubectl apply -f redis-secrets.yaml
 kubectl apply -f redis-configmap.yaml 
 kubectl apply -f redis-statefulset.yaml 
 kubectl apply -f redis-svc.yaml
 
 # =================== MONGODB =================== #
 cd ../mongo
-kubectl apply -f mongodb-statefulset-master.yaml
-kubectl apply -f mongodb-statefulset-replicas.yaml
+kubectl apply -f mongodb-secrets.yaml
+kubectl apply -f mongodb-statefulset.yaml
 kubectl apply -f mongodb-svc.yaml
 
 # ============= DJANGO / BACKEND ================ #
