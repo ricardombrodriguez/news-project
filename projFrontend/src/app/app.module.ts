@@ -25,6 +25,8 @@ import { MenuComponent } from './components/menu/menu.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PublicationPageComponent } from './pages/publication-page/publication-page.component';
 import { AngularEditorModule } from '@kolkov/angular-editor';
+import { environment } from 'src/environments/environment';
+
 
 @NgModule({
   declarations: [
@@ -57,7 +59,7 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
     FormsModule,
     ReactiveFormsModule,
   ],
-  providers: [],
+  providers: [{ provide: 'apiUrl', useValue: environment.apiUrl }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

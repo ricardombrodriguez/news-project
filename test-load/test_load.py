@@ -2,9 +2,9 @@ import requests
 import time
 import random
 
-#url = 'http://gic-group-6.k3s'
+url = 'http://gic-group-6.k3s'
 
-url = 'http://django.gic-group-6.k3s/admin'
+#url = 'http://django.gic-group-6.k3s/admin'
 
 """urls = [
     'https://example.com/page1',

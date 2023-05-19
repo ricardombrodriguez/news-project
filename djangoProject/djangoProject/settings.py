@@ -32,6 +32,9 @@ ALLOWED_HOSTS = [
     '127.0.0.1'
 ]
 
+CORS_ORIGIN_WHITELIST = [
+    '*'
+]
 
 # Application definition
 
@@ -55,6 +58,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',

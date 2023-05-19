@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Subject } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,8 @@ import { Subject } from 'rxjs';
 export class AuthenticationService {
 
   userId = new Subject<string | null>()
-  private baseUrl = 'http://127.0.0.1:7007/ws/';
+  private baseUrl = `http://django.gic-group-6.k3s/ws/`;
+
   curentUserId = localStorage.getItem('user_id')
 
   constructor(private http: HttpClient) {

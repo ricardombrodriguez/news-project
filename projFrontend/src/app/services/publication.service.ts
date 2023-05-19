@@ -8,6 +8,7 @@ import { PubStatusService } from './pub-status.service';
 import { User } from '../interfaces/user';
 import { Publication_Status } from '../interfaces/publication_status';
 import { Publication_Topics } from '../interfaces/publication_topics';
+import { environment } from '../../environments/environment';
 
 
 @Injectable({
@@ -15,7 +16,8 @@ import { Publication_Topics } from '../interfaces/publication_topics';
 })
 export class PublicationService {
 
-  private baseUrl = 'http://127.0.0.1:7007/ws/';
+  private baseUrl = `http://django.gic-group-6.k3s/ws/`;
+
   private user: User = new User;
   private status: Publication_Status = new Publication_Status;
 
