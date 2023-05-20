@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Subject } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
-  private baseUrl='http://127.0.0.1:7007/ws/';
+  
+  private baseUrl = `http://django.gic-group-6.k3s/ws/`;
+
 
   constructor(private http: HttpClient) { }
 

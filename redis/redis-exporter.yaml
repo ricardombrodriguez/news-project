@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: redis-exporter
+spec:
+ selector:
+   matchLabels:
+     app: redis-exporter
+ replicas: 1
+ template:
+   metadata:
+     labels:
+       app: redis-exporter
+     annotations:
+       prometheus.io/port: "9121"
+       prometheus.io/scrape: "true"
+   spec:
+     containers:
+     - name: redis-exporter
+       image: oliver006/redis_exporter:latest
+       ports:
+         - containerPort: 9121
+       env:
+       - name: REDIS_ADDR
+         value: 'redis://redis-cluster:6379'
+       - name: REDIS_USERNAME
+         valueFrom:
+            secretKeyRef:
+              name: redis-secret
+              key: redis-username
+       - name: REDIS_PASSWORD
+         valueFrom:
+            secretKeyRef:
+              name: redis-secret
+              key: redis-password
+       resources:
+         limits:
+           memory: "256Mi"
+           cpu: "256m"

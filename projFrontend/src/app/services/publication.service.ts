@@ -8,10 +8,14 @@ import { PubStatusService } from './pub-status.service';
 import { User } from '../interfaces/user';
 import { Publication_Status } from '../interfaces/publication_status';
 import { Publication_Topics } from '../interfaces/publication_topics';
+<<<<<<< HEAD
 import { RedisService } from './redis.service';
 import * as crypto from 'crypto';
 import { map } from 'rxjs/operators';
 
+=======
+import { environment } from '../../environments/environment';
+>>>>>>> 91c97ac18931bb75d017f2faa01c4db8d19a4796
 
 
 @Injectable({
@@ -19,7 +23,8 @@ import { map } from 'rxjs/operators';
 })
 export class PublicationService {
 
-  private baseUrl = 'http://127.0.0.1:7007/ws/';
+  private baseUrl = `http://django.gic-group-6.k3s/ws/`;
+
   private user: User = new User;
   private status: Publication_Status = new Publication_Status;
 
