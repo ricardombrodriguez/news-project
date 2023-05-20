@@ -50,8 +50,8 @@ export class PublicationPageComponent implements OnInit {
     this.getPublicationComments()
   }
 
-  getPublicationDetails() {
-    return this.publicationService.getPublication(this.id).subscribe((pub) => {
+  async getPublicationDetails() {
+    return (await this.publicationService.getPublication(this.id)).subscribe((pub) => {
       this.pub = pub;
 
       

@@ -8,6 +8,10 @@ import { PubStatusService } from './pub-status.service';
 import { User } from '../interfaces/user';
 import { Publication_Status } from '../interfaces/publication_status';
 import { Publication_Topics } from '../interfaces/publication_topics';
+import { RedisService } from './redis.service';
+import * as crypto from 'crypto';
+import { map } from 'rxjs/operators';
+
 
 
 @Injectable({
@@ -19,13 +23,34 @@ export class PublicationService {
   private user: User = new User;
   private status: Publication_Status = new Publication_Status;
 
-  constructor(private http: HttpClient, private userService: UsersService, private pubStatusService: PubStatusService) {
+
+  constructor(private http: HttpClient, private userService: UsersService, private pubStatusService: PubStatusService, private redisService: RedisService) {
     let username: string | null = localStorage.getItem('username');
     let token: string | null = localStorage.getItem('token')
   }
 
-  getPublication(id: number): Observable<Publication> {
-    return this.http.get<Publication>(this.baseUrl + 'publication/' + id + '/');
+  hashString(str: string): string {
+
+    const hash = crypto.createHash('sha256');
+    return hash.update(str).digest('hex');
+  }
+
+  async getPublication(id: number): Promise<Observable<Publication>>{
+    const hashedId = this.hashString(id.toString());
+    const cachedData = this.redisService.get(hashedId);
+    if (cachedData) {
+      return JSON.parse(await cachedData);
+    }
+    const pub = this.http.get<Publication>(this.baseUrl + 'publication/' + id + '/')
+      .pipe(
+        map((pub: Publication) => {
+          this.redisService.set(hashedId, JSON.stringify(pub));
+          return pub;
+        })
+
+      );
+    return pub;
+
   }
 
   createPublication(form: FormGroup, topics: Publication_Topics[], token: string): Observable<Publication> {
