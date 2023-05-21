@@ -8,14 +8,12 @@ import { PubStatusService } from './pub-status.service';
 import { User } from '../interfaces/user';
 import { Publication_Status } from '../interfaces/publication_status';
 import { Publication_Topics } from '../interfaces/publication_topics';
-<<<<<<< HEAD
-import { RedisService } from './redis.service';
-import * as crypto from 'crypto';
-import { map } from 'rxjs/operators';
+//import { RedisService } from './redis.service';
+//import * as crypto from 'crypto';
+//import { map } from 'rxjs/operators';
 
-=======
-import { environment } from '../../environments/environment';
->>>>>>> 91c97ac18931bb75d017f2faa01c4db8d19a4796
+
+
 
 
 @Injectable({
@@ -28,18 +26,19 @@ export class PublicationService {
   private user: User = new User;
   private status: Publication_Status = new Publication_Status;
 
-
-  constructor(private http: HttpClient, private userService: UsersService, private pubStatusService: PubStatusService, private redisService: RedisService) {
+  //private redisService: RedisService
+  constructor(private http: HttpClient, private userService: UsersService, private pubStatusService: PubStatusService) {
     let username: string | null = localStorage.getItem('username');
     let token: string | null = localStorage.getItem('token')
   }
 
-  hashString(str: string): string {
+  //hashString(str: string): string {
 
-    const hash = crypto.createHash('sha256');
-    return hash.update(str).digest('hex');
-  }
+    //const hash = crypto.createHash('sha256');
+    //return hash.update(str).digest('hex');
+  //}
 
+  /*
   async getPublication(id: number): Promise<Observable<Publication>>{
     const hashedId = this.hashString(id.toString());
     const cachedData = this.redisService.get(hashedId);
@@ -57,6 +56,7 @@ export class PublicationService {
     return pub;
 
   }
+  */
 
   createPublication(form: FormGroup, topics: Publication_Topics[], token: string): Observable<Publication> {
 

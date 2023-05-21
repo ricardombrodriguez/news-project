@@ -9,13 +9,15 @@ export class RedisService {
 
   constructor() {
     // Create a Redis client
-    /**
+    
     this.redis = new Redis({
       port: 6379,
       host: 'localhost',
-      password: 'password'
+      //password: 'password'
     });
-     */
+
+    console.log("Redis client created");  
+
     this.redis = new Redis();
 
   }
