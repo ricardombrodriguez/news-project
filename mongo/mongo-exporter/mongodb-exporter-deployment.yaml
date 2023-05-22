@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb-exporter
+  namespace: gic-group-6
+  labels:
+    app: mongodb-exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb-exporter
+  template:
+    metadata:
+      labels:
+        app: mongodb-exporter
+    spec:
+      containers:
+        - name: mongodb-exporter
+          image: percona/mongodb_exporter:2.37.0
+          args:
+            - "--mongodb.uri=mongodb://gic:verysecret@mongodb-0.mongodb.gic-group-6.svc.cluster.local:27017/?authSource=admin"
+          ports:
+            - containerPort: 9216
+      restartPolicy: Always

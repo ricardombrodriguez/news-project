@@ -74,9 +74,9 @@ spec:
             - name: MONGODB_REPLICA_SET_NAME
               value: "replicaset"
             - name: MONGODB_INITIAL_PRIMARY_HOST
-              value: "mongodb-0.mongodb.prof.svc.cluster.local"
+              value: "mongodb-0.mongodb.gic-group-6.svc.cluster.local"
             - name: MONGODB_ADVERTISED_HOSTNAME
-              value: "$(POD_NAME).mongodb.prof.svc.cluster.local"
+              value: "$(POD_NAME).mongodb.gic-group-6.svc.cluster.local"
             - name: MONGODB_REPLICA_SET_KEY
               valueFrom:
                 secretKeyRef:

@@ -91,11 +91,12 @@ class UserSerializer(serializers.ModelSerializer):
         user.is_active = True
         user.save()
         group = Groups.objects.get(description__exact="Reader")
-        print(group)
         u = Users(first_name=validated_data['first_name'], last_name=validated_data['last_name'],
                   username=validated_data['username'], group=group)
         u.save()
-        return Token.objects.get(user=user)
+        token, _ = Token.objects.get_or_create(user=user)
+        return token.key
+
 
 
 class TokenSerializer(serializers.ModelSerializer):

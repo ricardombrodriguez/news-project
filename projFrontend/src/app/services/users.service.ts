@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Group } from '../interfaces/group';
 import { User } from '../interfaces/user';
+import { environment } from '../../environments/environment';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -14,7 +15,8 @@ const httpOptions = {
 })
 export class UsersService {
 
-  private baseUrl = 'http://127.0.0.1:7007/ws/';
+  private baseUrl = `http://django.gic-group-6.k3s/ws/`;
+
 
   constructor(private http: HttpClient) { }
 

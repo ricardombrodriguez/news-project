@@ -3,13 +3,16 @@ import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Publication_Topics } from '../interfaces/publication_topics';
+import { environment } from '../../environments/environment';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class TopicsService {
-  private baseUrl = 'http://127.0.0.1:7007/ws/';
+  
+  private baseUrl = `http://django.gic-group-6.k3s/ws/`;
+
 
   constructor(private http: HttpClient) { }
 

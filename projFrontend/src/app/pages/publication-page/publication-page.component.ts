@@ -46,12 +46,13 @@ export class PublicationPageComponent implements OnInit {
     this.user_id =+str_id
     const url_array = this.router.url.split("/");
     this.id = +url_array[url_array.length - 1];
-    this.getPublicationDetails();
+    //this.getPublicationDetails();
     this.getPublicationComments()
   }
 
-  getPublicationDetails() {
-    return this.publicationService.getPublication(this.id).subscribe((pub) => {
+  /*
+  async getPublicationDetails() {
+    return (await this.publicationService.getPublication(this.id)).subscribe((pub) => {
       this.pub = pub;
 
       
@@ -68,6 +69,7 @@ export class PublicationPageComponent implements OnInit {
     
     })
   }
+  */
   accept(){
     console.log("accept")
     //quero mudar o estado da publicação atual para Approved 

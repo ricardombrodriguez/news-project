@@ -27,10 +27,14 @@ SECRET_KEY = 'django-insecure-6qq04o7e_(p!2^x8*+-s2gr%i=#rt8%92+d3yy)9w0uf51q=w!
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    'django.gic-group-6.k3s',
     'localhost',
-    'django.gic-group-6.k3s'
+    '127.0.0.1'
 ]
 
+CORS_ORIGIN_WHITELIST = [
+    '*'
+]
 
 # Application definition
 
@@ -44,8 +48,8 @@ INSTALLED_APPS = [
     'app.apps.AppConfig',
     'rest_framework',
     'corsheaders',
-    'rest_framework.authtoken',
-    'djongo'
+    'djongo',
+    'rest_framework.authtoken'
 ]
 
 MIDDLEWARE = [
@@ -54,6 +58,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -87,17 +92,20 @@ WSGI_APPLICATION = 'djangoProject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
-        'NAME': 'news',
-        'ENFORCE_SCHEMA': False,
+        'NAME': 'thenews',
         'CLIENT': {
-            'host': 'mongodb.default.svc.cluster.local',
+            'host': 'mongodb',
             'port': 27017,
-            'username': 'myuser',
-            'password': 'mypassword',
+            'username': 'admin',
+            'password': 'password123',
             'authSource': 'admin',
-        }
+            'authMechanism': 'SCRAM-SHA-1',
+        },
     }
 }
+
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
