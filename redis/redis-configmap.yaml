@@ -4,20 +4,47 @@ metadata:
   name: redis-config-map
   namespace: gic-group-6
 data:
-  # update-node-sh -> Updates redis cluster conf. file with IP address of the pod and execute redis proccess (happens when pod is (re)started )
-  update-node.sh: |
+  # update-node-sh -> Script to initialize the StatefulSet Redis pods in order to join the cluster
+  bootstrap-pod.sh: |+
     #!/bin/sh
-    REDIS_NODES="/data/nodes.conf"
-    sed -i -e "/myself/ s/[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}/${POD_IP}/" ${REDIS_NODES}
-    exec "$@"
+    set -ex
+
+    # Find which member of the Stateful Set this pod is running
+    # e.g. "redis-cluster-0" -> "0"
+    PET_ORDINAL=$(hostname | rev | cut -d- -f1)
+    MY_SHARD=$(($PET_ORDINAL % $NUM_SHARDS))
+
+    redis-server /conf/redis.conf &
+
+    # TODO: Wait until redis-server process is ready
+    sleep 1
+
+    if [ $PET_ORDINAL -lt $NUM_SHARDS ]; then
+
+      # Set up primary nodes. Divide slots into equal(ish) contiguous blocks
+      NUM_SLOTS=$(( 16384 / $NUM_SHARDS ))
+      REMAINDER=$(( 16384 % $NUM_SHARDS ))
+      START_SLOT=$(( $NUM_SLOTS * $MY_SHARD + ($MY_SHARD < $REMAINDER ? $MY_SHARD : $REMAINDER) ))
+      END_SLOT=$(( $NUM_SLOTS * ($MY_SHARD+1) + ($MY_SHARD+1 < $REMAINDER ? $MY_SHARD+1 : $REMAINDER) - 1 ))
+
+      PEER_IP=$(perl -MSocket -e "print inet_ntoa(scalar(gethostbyname(\"redis-cluster-0.redis-cluster.gic-group-6.svc.cluster.local\")))")
+      echo $PEER_IP
+      redis-cli cluster meet $PEER_IP 6379
+      redis-cli cluster addslots $(seq $START_SLOT $END_SLOT)
+    else
+      # Set up a replica
+      PEER_IP=$(perl -MSocket -e "print inet_ntoa(scalar(gethostbyname(\"redis-cluster-$MY_SHARD.redis-cluster.gic-group-6.svc.cluster.local\")))")
+      echo $PEER_IP
+      redis-cli --cluster add-node localhost:6379 $PEER_IP:6379 --cluster-slave
+    fi
+
+    wait
   # redis.conf -> Stores the configuration arguments for the redis pods
   redis.conf: |+
-    bind 0.0.0.0
-    port 6379
     cluster-enabled yes
     cluster-require-full-coverage no
     cluster-node-timeout 15000
-    cluster-config-file /data/nodes.conf
+    cluster-config-file redis.conf
     cluster-migration-barrier 1
     appendonly yes
     protected-mode no

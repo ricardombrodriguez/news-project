@@ -1,0 +1,10 @@
+#  Ensures high availability for the Redis Cluster, by remaining operational without any interruptions caused by pod disruptions
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: redis-pod-disruption-budget
+spec:
+  selector:
+    matchLabels:
+      app: redis
+  maxUnavailable: 0

@@ -21,6 +21,7 @@ kubectl delete -f mongodb-svc.yaml
 # =================== REDIS =================== #
 cd ../redis
 kubectl delete -f redis-secrets.yaml
+kubectl delete -f redis-pod-disruption-budget.yaml
 kubectl delete -f redis-configmap.yaml
 kubectl delete -f redis-statefulset.yaml
 kubectl delete -f redis-svc.yaml

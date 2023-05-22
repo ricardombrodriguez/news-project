@@ -6,6 +6,7 @@ metadata:
   labels:
     app: redis
 spec:
+  publishNotReadyAddresses: true    # publish endpoints for the Redis Cluster pods even if they are not ready yet
   clusterIP: None
   ports:
     - name: redis
@@ -13,4 +14,4 @@ spec:
       protocol: TCP
       targetPort: 6379
   selector:
-    app: redis
+    app: redis-cluster
