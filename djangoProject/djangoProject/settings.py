@@ -32,9 +32,6 @@ ALLOWED_HOSTS = [
     '127.0.0.1'
 ]
 
-CORS_ORIGIN_WHITELIST = [
-    '*'
-]
 
 # Application definition
 
@@ -94,8 +91,8 @@ DATABASES = {
         'ENGINE': 'djongo',
         'NAME': 'thenews',
         'CLIENT': {
-            'host': 'mongodb',
-            'port': 27017,
+            'host': 'localhost',
+            'port': 6000,
             'username': 'admin',
             'password': 'password123',
             'authSource': 'admin',

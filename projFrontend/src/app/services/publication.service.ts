@@ -22,6 +22,7 @@ import { Publication_Topics } from '../interfaces/publication_topics';
 export class PublicationService {
 
   private baseUrl = `http://django.gic-group-6.k3s/ws/`;
+  //private baseUrl = `http://localhost:7007/ws/`;
 
   private user: User = new User;
   private status: Publication_Status = new Publication_Status;
@@ -32,31 +33,10 @@ export class PublicationService {
     let token: string | null = localStorage.getItem('token')
   }
 
-  //hashString(str: string): string {
 
-    //const hash = crypto.createHash('sha256');
-    //return hash.update(str).digest('hex');
-  //}
-
-  /*
-  async getPublication(id: number): Promise<Observable<Publication>>{
-    const hashedId = this.hashString(id.toString());
-    const cachedData = this.redisService.get(hashedId);
-    if (cachedData) {
-      return JSON.parse(await cachedData);
-    }
-    const pub = this.http.get<Publication>(this.baseUrl + 'publication/' + id + '/')
-      .pipe(
-        map((pub: Publication) => {
-          this.redisService.set(hashedId, JSON.stringify(pub));
-          return pub;
-        })
-
-      );
-    return pub;
-
+  getPublication(id: number): Observable<Publication> {
+    return this.http.get<Publication>(this.baseUrl + 'publication/' + id + '/');
   }
-  */
 
   createPublication(form: FormGroup, topics: Publication_Topics[], token: string): Observable<Publication> {
 
