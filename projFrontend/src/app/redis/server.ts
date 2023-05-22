@@ -1,12 +1,13 @@
 const Redis = require('ioredis');
 const crypto = require('crypto');
-
+const http = require('http');
 
 let redisClient;
-
+let baseUrl = `http://127.0.0.1:7007/ws/`;
 
 async function connectToRedis() {
   redisClient = new Redis({
+    host: 'localhost', // Redis server host
     port: 6379, // Redis server port
   });
 
@@ -38,8 +39,7 @@ function hashKey(key) {
 
 function saveOnRedis(key, value) {
   redisClient.set(key, value);
-  redisClient.pexpire(key, 60000); //time to live one minute
-
+  redisClient.pexpire(key, 60000); // Time to live: one minute
 }
 
 function searchRequest(request) {
@@ -50,13 +50,33 @@ function searchRequest(request) {
       if (err) {
         reject(err);
       } else if (data === null) {
-        // Make request to backend
-        const apiResponse = { name: 'Tiffany', age: 23, city: 'California' };
-        const apiResponseString = JSON.stringify(apiResponse);
+        const options = {
+          method: 'GET',
+          hostname: '127.0.0.1',
+          port: 7007,
+          path: '/ws/publications',
+        };
 
-        saveOnRedis(key, apiResponse);
+        const req = http.request(options, (res) => {
+          const chunks = [];
 
-        resolve(apiResponseString);
+          res.on('data', (chunk) => {
+            chunks.push(chunk);
+          });
+
+          res.on('end', () => {
+            const responseBody = Buffer.concat(chunks).toString();
+            const apiResponseString = JSON.stringify(responseBody);
+            saveOnRedis(key, apiResponseString);
+            resolve(apiResponseString);
+          });
+        });
+
+        req.on('error', (error) => {
+          reject(error);
+        });
+
+        req.end();
       } else {
         resolve(data);
       }
@@ -67,14 +87,9 @@ function searchRequest(request) {
 (async () => {
   const redisClient = await connectToRedis();
 
-  const key = hashKey('/api/user/1');
-  const jsonRequest = { name: 'John', age: 30, city: 'New York' };
-  const jsonString = JSON.stringify(jsonRequest);
-
-  const res = await searchRequest('/api/user/1');
+  const res = await searchRequest('publications');
   const parsedRes = JSON.parse(res);
   console.log('Result:', parsedRes);
-
   // Cleanup and close the connection
   await redisClient.quit();
 })();

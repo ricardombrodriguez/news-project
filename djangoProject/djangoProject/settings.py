@@ -29,7 +29,14 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'django.gic-group-6.k3s',
     'localhost',
-    '127.0.0.1'
+    '127.0.0.1',
+    '*'
+]
+
+CORS_ALLOWED_ORIGINS = [
+    'http://django.gic-group-6.k3s',
+    'http://localhost',
+    'http://127.0.0.1',
 ]
 
 
