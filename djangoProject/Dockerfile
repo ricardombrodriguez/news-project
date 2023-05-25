@@ -10,7 +10,7 @@ RUN pip3 install -r requirements.txt
 
 COPY . /projBackend/
 
-ENV DJANGO_SUPERUSER_USERNAME=admin
+ENV DJANGO_SUPERUSER_USERNAME=admin4
 ENV DJANGO_SUPERUSER_EMAIL=admin@example.com
 ENV DJANGO_SUPERUSER_PASSWORD=admin
 

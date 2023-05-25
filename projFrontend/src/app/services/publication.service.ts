@@ -25,8 +25,8 @@ import { catchError, from } from 'rxjs';
 })
 export class PublicationService {
 
-  //private baseUrl = `http://django.gic-group-6.k3s/ws/`;
-  private baseUrl = `http://localhost:7007/ws/`;
+  private baseUrl = `http://django.gic-group-6.k3s/ws/`;
+  //private baseUrl = `http://localhost:7007/ws/`;
 
   private user: User = new User;
   private status: Publication_Status = new Publication_Status;
