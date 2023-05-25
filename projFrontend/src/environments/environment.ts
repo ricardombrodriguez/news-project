@@ -5,6 +5,7 @@
 export const environment = {
   production: false,
   apiUrl: 'backend-svc:8000/ws/',
+  redisUrl: 'redis://admin:password123@redis-cluster:6379',
 };
 
 /*

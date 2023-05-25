@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: registry.deti:5000/gic-group-6/frontend:v3
+        image: registry.deti:5000/gic-group-6/frontend:latest
         resources:
           requests:
             memory: "32Mi"
