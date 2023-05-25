@@ -98,15 +98,17 @@ DATABASES = {
         'ENGINE': 'djongo',
         'NAME': 'thenews',
         'CLIENT': {
-            'host': 'mongodb://mongodb-0.mongodb.gic-group-6.svc.cluster.local/?replicaSet=replicaset',
+            'host': 'mongodb-0.mongodb.gic-group-6.svc.cluster.local',
             'port': 27017,
             'username': 'gic',
             'password': 'verysecret',
             'authSource': 'admin',
-            'authMechanism': 'SCRAM-SHA-1',
+            'authMechanism': 'SCRAM-SHA-256',
+            'replicaSet': 'replicaset',
         },
     }
 }
+
 
 
 
