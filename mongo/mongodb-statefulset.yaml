@@ -13,7 +13,7 @@ data:
       export MONGODB_ROOT_PASSWORD=$MRP
       export MONGODB_USER=$MU
       export MONGODB_PASSWORD=$MP
-      export MONGODB_DATABASE="gicdb"
+      export MONGODB_DATABASE="thenews"
     else
       export MONGODB_REPLICA_SET_MODE="secondary"
       export MONGODB_INITIAL_PRIMARY_PORT_NUMBER="27017"

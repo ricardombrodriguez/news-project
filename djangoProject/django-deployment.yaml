@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: registry.deti:5000/gic-group-6/backend:v15
+        image: registry.deti:5000/gic-group-6/backend:v16
         imagePullPolicy: Always
         resources:
           requests:
@@ -33,7 +33,7 @@ spec:
         - containerPort: 8000
       initContainers:
       - name: init-django
-        image: registry.deti:5000/gic-group-6/backend:v15
+        image: registry.deti:5000/gic-group-6/backend:v16
         imagePullPolicy: Always
         command: 
           - "/bin/sh"

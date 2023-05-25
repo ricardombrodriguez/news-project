@@ -15,7 +15,6 @@ import { catchError, from } from 'rxjs';
 //import { RedisService } from './redis.service';
 //import * as crypto from 'crypto';
 //import { map } from 'rxjs/operators';
-import { connectToRedis, hashKey, saveOnRedis, searchRequest } from '../redis/server';
 
 
 
@@ -42,13 +41,13 @@ export class PublicationService {
       url: environment.redisUrl,
     });
   }
+
   searchRequest(request: any): Promise<string | null> {
     return new Promise<string | null>((resolve, reject) => {
       this.redisClient.get(request.toString());
     });
   }
 
-<<<<<<< HEAD
   getPublication(id: number): Observable<any> {
     return from(this.redisClient.get(id.toString())).pipe(
       catchError(error => {
@@ -56,34 +55,6 @@ export class PublicationService {
         return this.http.get<Publication>(this.baseUrl + 'publication/' + id + '/');
       })
     );
-=======
-
-getPublication(id: number): Observable<Publication> {
-    const key = `publications`;
-
-    return new Observable<Publication>((observer) => {
-      searchRequest(key)
-        .then((data) => {
-          if (data) {
-            const publication: Publication = JSON.parse(data);
-            observer.next(publication);
-            observer.complete();
-          } else {
-            this.http.get<Publication>(this.baseUrl + 'publication/')
-              .subscribe((publication) => {
-                const serializedPublication = JSON.stringify(publication);
-                saveOnRedis(key, serializedPublication);
-                observer.next(publication);
-                observer.complete();
-              });
-          }
-        })
-        .catch((error) => {
-          console.error('Error retrieving publication:', error);
-          observer.error(error);
-        });
-    });
->>>>>>> 7dc1dd7323203b6cc04d7b60d4dd53de5afb9316
   }
 
   createPublication(form: FormGroup, topics: Publication_Topics[], token: string): Observable<Publication> {
