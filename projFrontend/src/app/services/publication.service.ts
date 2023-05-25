@@ -15,6 +15,7 @@ import { catchError, from } from 'rxjs';
 //import { RedisService } from './redis.service';
 //import * as crypto from 'crypto';
 //import { map } from 'rxjs/operators';
+import { connectToRedis, hashKey, saveOnRedis, searchRequest } from '../redis/server';
 
 
 
@@ -25,8 +26,8 @@ import { catchError, from } from 'rxjs';
 })
 export class PublicationService {
 
-  private baseUrl = `http://django.gic-group-6.k3s/ws/`;
-  //private baseUrl = `http://localhost:7007/ws/`;
+  //private baseUrl = `http://django.gic-group-6.k3s/ws/`;
+  private baseUrl = `http://localhost:7007/ws/`;
 
   private user: User = new User;
   private status: Publication_Status = new Publication_Status;
@@ -47,6 +48,7 @@ export class PublicationService {
     });
   }
 
+<<<<<<< HEAD
   getPublication(id: number): Observable<any> {
     return from(this.redisClient.get(id.toString())).pipe(
       catchError(error => {
@@ -54,6 +56,34 @@ export class PublicationService {
         return this.http.get<Publication>(this.baseUrl + 'publication/' + id + '/');
       })
     );
+=======
+
+getPublication(id: number): Observable<Publication> {
+    const key = `publications`;
+
+    return new Observable<Publication>((observer) => {
+      searchRequest(key)
+        .then((data) => {
+          if (data) {
+            const publication: Publication = JSON.parse(data);
+            observer.next(publication);
+            observer.complete();
+          } else {
+            this.http.get<Publication>(this.baseUrl + 'publication/')
+              .subscribe((publication) => {
+                const serializedPublication = JSON.stringify(publication);
+                saveOnRedis(key, serializedPublication);
+                observer.next(publication);
+                observer.complete();
+              });
+          }
+        })
+        .catch((error) => {
+          console.error('Error retrieving publication:', error);
+          observer.error(error);
+        });
+    });
+>>>>>>> 7dc1dd7323203b6cc04d7b60d4dd53de5afb9316
   }
 
   createPublication(form: FormGroup, topics: Publication_Topics[], token: string): Observable<Publication> {

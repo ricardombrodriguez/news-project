@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: registry.deti:5000/gic-group-6/backend:v1
+        image: registry.deti:5000/gic-group-6/backend:v12
         resources:
           requests:
             memory: "32Mi"
@@ -32,7 +32,7 @@ spec:
         - containerPort: 8000
       initContainers:
       - name: init-django
-        image: registry.deti:5000/gic-group-6/backend:v1
+        image: registry.deti:5000/gic-group-6/backend:v12
         command: 
           - "/bin/sh"
           - "-c"
