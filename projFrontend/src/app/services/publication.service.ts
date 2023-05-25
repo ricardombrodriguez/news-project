@@ -15,7 +15,6 @@ import { catchError, from } from 'rxjs';
 //import { RedisService } from './redis.service';
 //import * as crypto from 'crypto';
 //import { map } from 'rxjs/operators';
-import { connectToRedis, hashKey, saveOnRedis, searchRequest } from '../redis/server';
 
 
 
@@ -42,6 +41,7 @@ export class PublicationService {
       url: environment.redisUrl,
     });
   }
+
   searchRequest(request: any): Promise<string | null> {
     return new Promise<string | null>((resolve, reject) => {
       this.redisClient.get(request.toString());
