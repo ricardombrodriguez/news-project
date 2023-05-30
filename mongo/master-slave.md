@@ -12,3 +12,14 @@ rs.initiate(
 
 
 To enable free monitoring, run the following command: db.enableFreeMonitoring()
+
+
+
+
+db.createUser({
+  user: "gic",
+  pwd: "verysecrect",
+  roles: [
+    { role: "userAdmin", db: "thenews" }
+  ]
+})

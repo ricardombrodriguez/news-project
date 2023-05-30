@@ -24,13 +24,14 @@ export class ActivePublicationsComponent implements OnInit {
   ngOnInit(): void {
    
     this.getApprovedPublications();
-    console.log("aqui")
 
   }
 
   getApprovedPublications(): void {
     this.publicationsService.getPublicationsByStatus("Approved").subscribe((publications) => {
       this.publications = publications;
+      console.log("PORTO");
+      console.log(publications);
     });
   }
 

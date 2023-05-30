@@ -10,12 +10,14 @@ export class PublicationComponent implements OnInit {
 
   @Input() publication!: Publication;
 
-  constructor() { }
+  constructor() {
+
+  };
 
   ngOnInit(): void {
 
 
-
+    console.log("PUB    SWSWSW : ", this.publication);
 
   }
 

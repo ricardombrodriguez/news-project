@@ -59,7 +59,7 @@ import { environment } from 'src/environments/environment';
     FormsModule,
     ReactiveFormsModule,
   ],
-  providers: [{ provide: 'apiUrl', useValue: environment.apiUrl }],
+  providers: [{ provide: 'apiURL', useValue: environment.apiURL }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

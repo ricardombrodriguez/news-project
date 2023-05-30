@@ -102,7 +102,6 @@ DATABASES = {
             'port': 6000,
             'username': 'admin',
             'password': 'password123',
-            'authSource': 'admin',
             'authMechanism': 'SCRAM-SHA-1',
         },
     }

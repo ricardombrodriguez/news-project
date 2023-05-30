@@ -10,7 +10,8 @@ import { environment } from '../../environments/environment';
 })
 export class CommentsService {
 
-  private baseUrl = `http://django.gic-group-6.k3s/ws/`;
+  private baseUrl = environment.apiURL;
+  private expressURL = environment.expressURL;
 
 
 

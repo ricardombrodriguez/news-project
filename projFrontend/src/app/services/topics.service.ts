@@ -11,7 +11,9 @@ import { environment } from '../../environments/environment';
 })
 export class TopicsService {
   
-  private baseUrl = `http://django.gic-group-6.k3s/ws/`;
+  private baseUrl = environment.apiURL;
+  private expressURL = environment.expressURL;
+
 
 
   constructor(private http: HttpClient) { }

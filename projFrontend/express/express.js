@@ -48,6 +48,9 @@ app.post('/set', (req, res) => {
   const key = hashKey(req.body.key);
   const value = req.body.value;
 
+  console.log('key:', key);
+  console.log('value:', value);
+
   redisClient.set(key, value, 'PX', 600000, (err) => {
     if (err) {
       console.error('Error setting data in Redis:', err);
@@ -55,9 +58,10 @@ app.post('/set', (req, res) => {
       return;
     }
 
-    res.send(`Key-value pair saved with key: ${key}`);
+    res.status(200).json({ message: 'Key-value pair saved' });
   });
 });
+
 
 app.listen(8000, () => {
   console.log('Server started on port 8000');

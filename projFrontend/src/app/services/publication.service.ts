@@ -1,3 +1,4 @@
+import { environment } from './../../environments/environment';
 import { Injectable } from '@angular/core';
 import { Observable } from "rxjs/internal/Observable";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
@@ -8,16 +9,20 @@ import { PubStatusService } from './pub-status.service';
 import { User } from '../interfaces/user';
 import { Publication_Status } from '../interfaces/publication_status';
 import { Publication_Topics } from '../interfaces/publication_topics';
-import { environment } from 'src/environments/environment';
-import { catchError, from } from 'rxjs';
+import { catchError, defer, from } from 'rxjs';
+import fetch from 'node-fetch';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class PublicationService {
 
-  private baseUrl = `http://django.gic-group-6.k3s/ws/`;
+  //private baseUrl = `http://django.gic-group-6.k3s/ws/`;
   //private baseUrl = `http://localhost:7007/ws/`;
+
+  private baseUrl = environment.apiURL;
+  private expressURL = environment.expressURL;
 
   private user: User = new User;
   private status: Publication_Status = new Publication_Status;
@@ -27,32 +32,94 @@ export class PublicationService {
     let token: string | null = localStorage.getItem('token');
   }
 
-  searchRequest(request: any): Promise<string | null> {
-    return new Promise<string | null>((resolve, reject) => {
+  searchRequest(request: any): void {
+    // console.log("search request");
+    // return new Promise<string | null>((resolve, reject) => {
+    //   const key = request;
+    //   console.log("get key ", key);
+    //   this.http.get('http://localhost:8000/get/' + key).subscribe({
+    //     next: (response) => {
+    //       // Handle the JSON response
+    //       console.log("RESPOSTA");
+    //       console.log(response);
+    //     },
+    //     error: (error) => {
+    //       // Handle any errors
+    //       console.error('An error occurred:', error);
+    //     },
+    //   });
+    // });
 
-      const key = request;
-
-      this.http.get('127.0.0.1:8000/get/' + key).subscribe({
-        next: (response) => {
-          // Handle the JSON response
-          console.log(response);
-        },
-        error: (error) => {
-          // Handle any errors
-          console.error('An error occurred:', error);
-        },
-      });
-    });
+    const key = request;
+    this.http.get(this.expressURL + "/get" + key)
+    .subscribe(
+      (responseData) => {
+        console.log('Response data:', responseData);
+      },
+      (error) => {
+        console.error('Error occurred during HTTP request:', error);
+      }
+    );
+      
   }
 
-  // getPublication(id: number): Observable<any> {
-  //   return from(this.redisClient.get(id.toString())).pipe(
-  //     catchError(error => {
-  //       console.error('Error retrieving object from Redis:', error);
-  //       return this.http.get<Publication>(this.baseUrl + 'publication/' + id + '/');
-  //     })
-  //   );
-  // }
+  getPublication(id: number): Observable<Publication> {
+    console.log("search request");
+  
+    let pub;
+    pub = from(new Promise<Publication>((resolve, reject) => {
+      const key = id;
+      console.log("get key ", key);
+      this.http.get(this.expressURL + "/get"+ key).subscribe({
+        next: (response) => {
+          return response;
+        },
+        error: (error) => {
+          if (error.status === 404) {
+            // Make the API request to get the data
+            this.http.get<Publication>(this.baseUrl + 'publication/' + id + '/').subscribe((apiResponse) => {
+              // Save the data to the backend or perform any other desired actions
+              // resolve(apiResponse);
+  
+              this.saveCache(apiResponse); // Call the saveCache function to save the data in cache
+              return apiResponse;
+            }, (apiError) => {
+              console.error("API error occurred:", apiError);
+              // Handle API error, e.g., reject the promise or perform fallback actions
+              // reject(apiError);
+            });
+          } else {
+            console.error("An error occurred:", error);
+            // Handle other error statuses if needed
+            // reject(error);
+          }
+        },
+      });
+    }));
+  
+    console.log("Pub do redis :::: ", pub);
+    return pub;
+    
+  }
+  
+
+  saveCache(pub: Publication) {
+    console.log("saving pub in cache ", pub);
+    const cacheData = {
+      key: pub.id.toString(),
+      value: JSON.stringify(pub)
+    };
+    this.http.post(this.expressURL + "/set", cacheData).subscribe({
+      next: (response) => {
+        console.log("Cache saved successfully:", response);
+      },
+      error: (error) => {
+        console.error("Error saving to cache:", error);
+      }
+    });
+    console.log("filho da puta aleezz");
+  }
+  
 
   createPublication(form: FormGroup, topics: Publication_Topics[], token: string): Observable<Publication> {
 
