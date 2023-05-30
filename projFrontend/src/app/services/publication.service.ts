@@ -29,6 +29,8 @@ export class PublicationService {
     let username: string | null = localStorage.getItem('username');
     let token: string | null = localStorage.getItem('token');
 
+    console.log(environment.redisUrl);
+
     this.redisClient = Redis.createClient({
       url: environment.redisUrl,
     });
