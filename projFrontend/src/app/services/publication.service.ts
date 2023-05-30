@@ -12,13 +12,6 @@ import * as Redis from 'redis';
 import { environment } from 'src/environments/environment';
 import { catchError, from } from 'rxjs';
 
-//import { RedisService } from './redis.service';
-//import * as crypto from 'crypto';
-//import { map } from 'rxjs/operators';
-
-
-
-
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +25,6 @@ export class PublicationService {
   private status: Publication_Status = new Publication_Status;
   private redisClient;
 
-  //private redisService: RedisService
   constructor(private http: HttpClient, private userService: UsersService, private pubStatusService: PubStatusService) {
     let username: string | null = localStorage.getItem('username');
     let token: string | null = localStorage.getItem('token');
@@ -40,6 +32,9 @@ export class PublicationService {
     this.redisClient = Redis.createClient({
       url: environment.redisUrl,
     });
+
+    this.redisClient.on('error', err => console.log('Redis Client Error', err));
+
   }
 
   searchRequest(request: any): Promise<string | null> {
