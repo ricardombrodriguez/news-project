@@ -8,10 +8,8 @@ import { PubStatusService } from './pub-status.service';
 import { User } from '../interfaces/user';
 import { Publication_Status } from '../interfaces/publication_status';
 import { Publication_Topics } from '../interfaces/publication_topics';
-import * as Redis from 'redis';
 import { environment } from 'src/environments/environment';
 import { catchError, from } from 'rxjs';
-
 
 @Injectable({
   providedIn: 'root'
@@ -23,36 +21,38 @@ export class PublicationService {
 
   private user: User = new User;
   private status: Publication_Status = new Publication_Status;
-  private redisClient;
 
   constructor(private http: HttpClient, private userService: UsersService, private pubStatusService: PubStatusService) {
     let username: string | null = localStorage.getItem('username');
     let token: string | null = localStorage.getItem('token');
-
-    console.log(environment.redisUrl);
-
-    this.redisClient = Redis.createClient({
-      url: environment.redisUrl,
-    });
-
-    this.redisClient.on('error', err => console.log('Redis Client Error', err));
-
   }
 
   searchRequest(request: any): Promise<string | null> {
     return new Promise<string | null>((resolve, reject) => {
-      this.redisClient.get(request.toString());
+
+      const key = request;
+
+      this.http.get('127.0.0.1:8000/get/' + key).subscribe({
+        next: (response) => {
+          // Handle the JSON response
+          console.log(response);
+        },
+        error: (error) => {
+          // Handle any errors
+          console.error('An error occurred:', error);
+        },
+      });
     });
   }
 
-  getPublication(id: number): Observable<any> {
-    return from(this.redisClient.get(id.toString())).pipe(
-      catchError(error => {
-        console.error('Error retrieving object from Redis:', error);
-        return this.http.get<Publication>(this.baseUrl + 'publication/' + id + '/');
-      })
-    );
-  }
+  // getPublication(id: number): Observable<any> {
+  //   return from(this.redisClient.get(id.toString())).pipe(
+  //     catchError(error => {
+  //       console.error('Error retrieving object from Redis:', error);
+  //       return this.http.get<Publication>(this.baseUrl + 'publication/' + id + '/');
+  //     })
+  //   );
+  // }
 
   createPublication(form: FormGroup, topics: Publication_Topics[], token: string): Observable<Publication> {
 
