@@ -1,36 +1,64 @@
-const redis = require('redis');
 const express = require('express');
-const app = express();
-const port = 8000;
+const Redis = require('ioredis');
+const crypto = require('crypto');
 
-var client = redis.createClient({
-  url: 'redis://admin:password123@redis-cluster:6379'
+const app = express();
+const redisClient = new Redis({
+  host: 'localhost',
+  port: 6379,
 });
 
-// Add middleware to parse JSON request bodies
+redisClient.on('connect', () => {
+  console.log('Connected to Redis');
+});
+
+redisClient.on('error', (err) => {
+  console.error('Error connecting to Redis:', err);
+});
+
 app.use(express.json());
 
-app.get('/', (req,res) => {
-  res.send('hello world');
-})
+function hashKey(key) {
+  const hash = crypto.createHash('sha256');
+  hash.update(key);
+  const hashedKey = hash.digest('hex');
+  return hashedKey;
+}
 
-app.get('/cache', (req, res) => {
-  client.get(req, (err, data) => {
-    let apiResponseString = {};
-    if (data) {
-      const responseBody = Buffer.concat(data).toString();
-      apiResponseString = JSON.stringify(responseBody);
+app.get('/get/:key', (req, res) => {
+  const key = req.params.key;
+
+
+  redisClient.get(key, (err, data) => {
+    if (err) {
+      console.error('Error retrieving data from Redis:', err);
+      res.status(500).send('Error retrieving data');
+      return;
     }
-    res.send(apiResponseString);
+
+    if (data) {
+      res.send(data);
+    } else {
+      res.status(404).send('No data for given key');
+    }
   });
 });
 
-app.set('/cache', (req, res) => {
-  client.set(req.key, req.value);
-  res.sendStatus(200);
+app.post('/set', (req, res) => {
+  const key = hashKey(req.body.key);
+  const value = req.body.value;
+
+  redisClient.set(key, value, 'PX', 600000, (err) => {
+    if (err) {
+      console.error('Error setting data in Redis:', err);
+      res.status(500).send('Error setting data');
+      return;
+    }
+
+    res.send(`Key-value pair saved with key: ${key}`);
+  });
 });
 
-// Start the server
-app.listen(port, () => {
-  console.log(`Express server is running on port ${port}`);
+app.listen(8000, () => {
+  console.log('Server started on port 3000');
 });
