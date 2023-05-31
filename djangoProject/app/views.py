@@ -1,3 +1,4 @@
+import datetime
 from django.db.models.functions import Concat
 from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
@@ -276,12 +277,15 @@ def create_publication(request):
     request.data['topic'] = request.data['topic']['id']
     request.data['author'] = request.data['author']['id']
     request.data['status'] = stat.id
+    request.data['created_on'] = datetime.datetime.now().isoformat() + "+00:00"
     print(request.data)
     serializer = PublicationsSerializer(data=request.data)
     print(serializer)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    print("aaaa")
+    print(serializer.errors)
     return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
 

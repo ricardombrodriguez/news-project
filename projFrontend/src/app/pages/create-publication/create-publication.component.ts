@@ -4,6 +4,7 @@ import { TopicsService } from 'src/app/services/topics.service';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { PublicationService } from 'src/app/services/publication.service';
+import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Component({
