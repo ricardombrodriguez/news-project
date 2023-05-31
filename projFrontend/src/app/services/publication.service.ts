@@ -10,7 +10,6 @@ import { User } from '../interfaces/user';
 import { Publication_Status } from '../interfaces/publication_status';
 import { Publication_Topics } from '../interfaces/publication_topics';
 import { catchError, defer, from } from 'rxjs';
-import fetch from 'node-fetch';
 
 
 @Injectable({
@@ -19,9 +18,9 @@ import fetch from 'node-fetch';
 export class PublicationService {
 
   //private baseUrl = `http://django.gic-group-6.k3s/ws/`;
-  //private baseUrl = `http://localhost:7007/ws/`;
+  private baseUrl = `http://localhost:7007/ws/`;
 
-  private baseUrl = environment.apiURL;
+  //private baseUrl = environment.apiURL;
   private expressURL = environment.expressURL;
 
   private user: User = new User;
@@ -33,22 +32,6 @@ export class PublicationService {
   }
 
   searchRequest(request: any): void {
-    // console.log("search request");
-    // return new Promise<string | null>((resolve, reject) => {
-    //   const key = request;
-    //   console.log("get key ", key);
-    //   this.http.get('http://localhost:8000/get/' + key).subscribe({
-    //     next: (response) => {
-    //       // Handle the JSON response
-    //       console.log("RESPOSTA");
-    //       console.log(response);
-    //     },
-    //     error: (error) => {
-    //       // Handle any errors
-    //       console.error('An error occurred:', error);
-    //     },
-    //   });
-    // });
 
     const key = request;
     this.http.get(this.expressURL + "/get" + key)
@@ -66,8 +49,7 @@ export class PublicationService {
   getPublication(id: number): Observable<Publication> {
     console.log("search request");
   
-    let pub;
-    pub = from(new Promise<Publication>((resolve, reject) => {
+    let pub = from(new Promise<Publication>((resolve, reject) => {
       const key = id;
       console.log("get key ", key);
       this.http.get(this.expressURL + "/get"+ key).subscribe({
@@ -98,7 +80,7 @@ export class PublicationService {
     }));
   
     console.log("Pub do redis :::: ", pub);
-    return pub;
+    return this.http.get<Publication>(this.baseUrl + 'publication/' + id + '/');
     
   }
   

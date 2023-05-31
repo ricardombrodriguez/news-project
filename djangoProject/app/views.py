@@ -56,13 +56,11 @@ def get_group_by_description(request):
 @api_view(['POST'])
 def create_user(request):
 
-    print(request.data)
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
         ret = serializer.create(request.data)
-        token = TokenSerializer(data={'key': ret.key})
+        token = TokenSerializer(data={'key': ret})
         return Response(token.initial_data)
-    print(serializer.errors)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

@@ -1,10 +1,12 @@
+# Masters
+
 apiVersion: v1
 kind: Service
 metadata:
-  name: redis-cluster
+  name: redis-master-svc
   namespace: gic-group-6
   labels:
-    app: redis
+    app: redis-master-svc
 spec:
   publishNotReadyAddresses: true    # publish endpoints for the Redis Cluster pods even if they are not ready yet
   clusterIP: None
@@ -14,4 +16,61 @@ spec:
       protocol: TCP
       targetPort: 6379
   selector:
-    app: redis-cluster
+    app: redis-master
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-master-lb
+  namespace: gic-group-6
+  labels:
+    app: redis-master-lb
+spec:
+  type: LoadBalancer
+  selector:
+    app: redis-master
+  ports:
+    - name: redis
+      port: 6379
+      protocol: TCP
+      targetPort: 6379
+
+
+---
+# Slaves
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-slave-svc
+  namespace: gic-group-6
+  labels:
+    app: redis-slave-svc
+spec:
+  publishNotReadyAddresses: true    # publish endpoints for the Redis Cluster pods even if they are not ready yet
+  clusterIP: None
+  ports:
+    - name: redis
+      port: 6379
+      protocol: TCP
+      targetPort: 6379
+  selector:
+    app: redis-slave
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-slave-lb
+  namespace: gic-group-6
+  labels:
+    app: redis-slave-lb
+spec:
+  type: LoadBalancer
+  selector:
+    app: redis-slave
+  ports:
+    - name: redis
+      port: 6379
+      protocol: TCP
+      targetPort: 6379
+---

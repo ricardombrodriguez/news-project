@@ -95,6 +95,7 @@ class UserSerializer(serializers.ModelSerializer):
                   username=validated_data['username'], group=group)
         u.save()
         token, _ = Token.objects.get_or_create(user=user)
+        print(token)
         return token.key
 
 

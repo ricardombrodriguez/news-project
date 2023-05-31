@@ -10,8 +10,8 @@ data:
     set -ex
 
     # Find which member of the Stateful Set this pod is running
-    # e.g. "redis-cluster-0" -> "0"
-    PET_ORDINAL=$(hostname | rev | cut -d- -f1)
+    TYPE=$(hostname | cut -d- -f2)
+    PET_ORDINAL=$(hostname | cut -d- -f3)
     MY_SHARD=$(($PET_ORDINAL % $NUM_SHARDS))
 
     redis-server /conf/redis.conf &
@@ -19,7 +19,7 @@ data:
     # TODO: Wait until redis-server process is ready
     sleep 1
 
-    if [ $PET_ORDINAL -lt $NUM_SHARDS ]; then
+    if [ "$TYPE" = "master" ]; then
 
       # Set up primary nodes. Divide slots into equal(ish) contiguous blocks
       NUM_SLOTS=$(( 16384 / $NUM_SHARDS ))
@@ -27,19 +27,18 @@ data:
       START_SLOT=$(( $NUM_SLOTS * $MY_SHARD + ($MY_SHARD < $REMAINDER ? $MY_SHARD : $REMAINDER) ))
       END_SLOT=$(( $NUM_SLOTS * ($MY_SHARD+1) + ($MY_SHARD+1 < $REMAINDER ? $MY_SHARD+1 : $REMAINDER) - 1 ))
 
-      PEER_IP=$(perl -MSocket -e "print inet_ntoa(scalar(gethostbyname(\"redis-cluster-0.redis-cluster.gic-group-6.svc.cluster.local\")))")
+      PEER_IP=$(perl -MSocket -e "print inet_ntoa(scalar(gethostbyname(\"redis-master-0.redis-master-svc.gic-group-6.svc.cluster.local\")))")
       echo $PEER_IP
       redis-cli cluster meet $PEER_IP 6379
       redis-cli cluster addslots $(seq $START_SLOT $END_SLOT)
     else
       # Set up a replica
-      PEER_IP=$(perl -MSocket -e "print inet_ntoa(scalar(gethostbyname(\"redis-cluster-$MY_SHARD.redis-cluster.gic-group-6.svc.cluster.local\")))")
+      PEER_IP=$(perl -MSocket -e "print inet_ntoa(scalar(gethostbyname(\"redis-master-$MY_SHARD.redis-master-svc.gic-group-6.svc.cluster.local\")))")
       echo $PEER_IP
       redis-cli --cluster add-node localhost:6379 $PEER_IP:6379 --cluster-slave
     fi
 
     wait
-  # redis.conf -> Stores the configuration arguments for the redis pods
   redis.conf: |+
     cluster-enabled yes
     cluster-require-full-coverage no
