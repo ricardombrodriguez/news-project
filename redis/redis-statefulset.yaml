@@ -5,7 +5,7 @@ metadata:
   namespace: gic-group-6
 spec:
   podManagementPolicy: OrderedReady 
-  serviceName: redis-master
+  serviceName: redis-master-svc
   replicas: 3
   selector:
     matchLabels:
@@ -79,7 +79,7 @@ spec:
         # Wait for the redis-cluster service to exist. We need it to resolve the hostnames of our nodes
       - name: init-redis-master
         image: busybox:1.28
-        command: ['sh', '-c', "until nslookup redis-master.gic-group-6.svc.cluster.local; do echo waiting for redis-master; sleep 2; done"]
+        command: ['sh', '-c', "until nslookup redis-master-svc.gic-group-6.svc.cluster.local; do echo waiting for redis-master-svc; sleep 2; done"]
       volumes:
       # Insert our pre-baked Redis configuration file into /conf/redis.conf
       - name: conf
@@ -115,7 +115,6 @@ spec:
       resources:
         requests:
           storage: 1Gi
-
 ---
 
 apiVersion: apps/v1
@@ -197,9 +196,9 @@ spec:
           readOnly: false
       initContainers:
         # Wait for the redis-cluster service to exist. We need it to resolve the hostnames of our nodes
-      - name: init-redis-slave
+      - name: init-redis-slavei
         image: busybox:1.28
-        command: ['sh', '-c', "until nslookup redis-slave.gic-group-6.svc.cluster.local; do echo waiting for redis-slave; sleep 2; done"]
+        command: ['sh', '-c', "until nslookup redis-slave-svc.gic-group-6.svc.cluster.local; do echo waiting for redis-slave-svc; sleep 2; done"]
       volumes:
       # Insert our pre-baked Redis configuration file into /conf/redis.conf
       - name: conf

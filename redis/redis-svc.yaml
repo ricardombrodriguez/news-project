@@ -47,7 +47,7 @@ metadata:
   labels:
     app: redis-slave-svc
 spec:
-  publishNotReadyAddresses: true    # publish endpoints for the Redis Cluster pods even if they are not ready yet
+  publishNotReadyAddresses: true  #  publish endpoints for the Redis Cluster pods even if they are not ready yet
   clusterIP: None
   ports:
     - name: redis
