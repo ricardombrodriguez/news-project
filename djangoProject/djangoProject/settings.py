@@ -96,16 +96,15 @@ WSGI_APPLICATION = 'djangoProject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
+        'ENFORCE_SCHEMA': True,
         'NAME': 'thenews',
         'CLIENT': {
-            'host': 'localhost',
-            'port': 6000,
-            'username': 'admin',
-            'password': 'password123',
-            'authMechanism': 'SCRAM-SHA-1',
-        },
+            'host': 'mongodb://gic:verysecrect@mongodb:27017/thenews?authMechanism=SCRAM-SHA-1',
+        }
     }
 }
+
+
 
 
 

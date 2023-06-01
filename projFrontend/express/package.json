@@ -1,0 +1,15 @@
+{
+    "name": "redis-api",
+    "version": "1.0.0",
+    "description": "Node.js on Docker",
+    "main": "express.js",
+    "scripts": {
+      "start": "node express.js"
+    },
+    "dependencies": {
+      "express": "^4.17.1",
+      "ioredis": "^5.3.2",
+      "crypto": "^1.0.1",
+      "url": "^0.11.0"
+    }
+  }

@@ -15,8 +15,10 @@ const httpOptions = {
 })
 export class UsersService {
 
-  private baseUrl = environment.apiURL;
-  private expressURL = environment.expressURL;
+  //private baseUrl = environment.apiURL;
+  //private expressURL = environment.expressURL;
+
+  private baseUrl = `http://django.gic-group-6.k3s/ws/`;
 
 
   constructor(private http: HttpClient) { }
