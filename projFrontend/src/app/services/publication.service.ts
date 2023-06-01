@@ -17,11 +17,14 @@ import { catchError, defer, from } from 'rxjs';
 })
 export class PublicationService {
 
-  //private baseUrl = `http://django.gic-group-6.k3s/ws/`;
-  private baseUrl = `http://localhost:7007/ws/`;
+ 
+  //private baseUrl = `http://localhost:7007/ws/`;
 
   //private baseUrl = environment.apiURL;
-  private expressURL = environment.expressURL;
+  //private expressURL = environment.expressURL; 
+  private baseUrl = `http://django.gic-group-6.k3s/ws/`;
+  private expressURL = 'http://localhost:8000';
+
 
   private user: User = new User;
   private status: Publication_Status = new Publication_Status;
@@ -34,7 +37,7 @@ export class PublicationService {
   searchRequest(request: any): void {
 
     const key = request;
-    this.http.get(this.expressURL + "/get" + key)
+    this.http.get('http://localhost:8000' + "/get/" + key)
     .subscribe(
       (responseData) => {
         console.log('Response data:', responseData);
@@ -52,7 +55,7 @@ export class PublicationService {
     let pub = from(new Promise<Publication>((resolve, reject) => {
       const key = id;
       console.log("get key ", key);
-      this.http.get(this.expressURL + "/get"+ key).subscribe({
+      this.http.get('http://localhost:8000' + "/get/"+ key).subscribe({
         next: (response) => {
           return response;
         },
@@ -91,7 +94,7 @@ export class PublicationService {
       key: pub.id.toString(),
       value: JSON.stringify(pub)
     };
-    this.http.post(this.expressURL + "/set", cacheData).subscribe({
+    this.http.post('http://localhost:8000' + "/set", cacheData).subscribe({
       next: (response) => {
         console.log("Cache saved successfully:", response);
       },
@@ -99,7 +102,6 @@ export class PublicationService {
         console.error("Error saving to cache:", error);
       }
     });
-    console.log("filho da puta aleezz");
   }
   
 

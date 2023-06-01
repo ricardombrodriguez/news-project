@@ -1,11 +1,18 @@
 const express = require('express');
 const Redis = require('ioredis');
 const crypto = require('crypto');
+const { parse } = require("url");
 
 const app = express();
+
+const connectionString = 'redis://admin:password123@redis-cluster:6379';
+const { hostname, port, auth } = parse(connectionString);
+const host = hostname.replace("redis://", "");
+
 const redisClient = new Redis({
-  host: 'localhost',
-  port: 6379,
+  host: host,
+  port: parseInt(port),
+  password: auth.split(":")[1],
 });
 
 redisClient.on('connect', () => {
