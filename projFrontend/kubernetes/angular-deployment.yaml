@@ -31,7 +31,7 @@ spec:
         ports:
         - containerPort: 80
       - name: redis-express
-        image: registry.deti:5000/gic-group-6/redis-api:v3
+        image: registry.deti:5000/gic-group-6/redis-api:v8
         resources:
           requests:
             memory: "32Mi"

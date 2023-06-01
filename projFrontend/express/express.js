@@ -1,26 +1,29 @@
 const express = require('express');
 const Redis = require('ioredis');
 const crypto = require('crypto');
-const { parse } = require("url");
 
 const app = express();
 
-const connectionString = 'redis://admin:password123@redis-cluster:6379';
-const { hostname, port, auth } = parse(connectionString);
-const host = hostname.replace("redis://", "");
+const connectionStringMasters = 'redis://redis-master-lb:6379';
+const connectionStringSlaves = 'redis://redis-slave-lb:6379';
 
-const redisClient = new Redis({
-  host: host,
-  port: parseInt(port),
-  password: auth.split(":")[1],
+const redisClientMasters = new Redis(connectionStringMasters);
+const redisClientSlaves = new Redis(connectionStringSlaves);
+
+redisClientMasters.on('connect', () => {
+  console.log('Connected to Redis Masters LB');
 });
 
-redisClient.on('connect', () => {
-  console.log('Connected to Redis');
+redisClientMasters.on('error', (err) => {
+  console.error('Error connecting to Redis Masters LB: ', err);
 });
 
-redisClient.on('error', (err) => {
-  console.error('Error connecting to Redis:', err);
+redisClientSlaves.on('connect', () => {
+  console.log('Connected to Redis Slaves LB');
+});
+
+redisClientSlaves.on('error', (err) => {
+  console.error('Error connecting to Redis Slaves LB: ', err);
 });
 
 app.use(express.json());
@@ -36,7 +39,7 @@ app.get('/get/:key', (req, res) => {
 
   const key = hashKey(req.params.key);
 
-  redisClient.get(key, (err, data) => {
+  redisClientSlaves.get(key, (err, data) => {
     if (err) {
       console.error('Error retrieving data from Redis:', err);
       res.status(500).send('Error retrieving data');
@@ -58,7 +61,7 @@ app.post('/set', (req, res) => {
   console.log('key:', key);
   console.log('value:', value);
 
-  redisClient.set(key, value, 'PX', 600000, (err) => {
+  redisClientMasters.set(key, value, 'PX', 600000, (err) => {
     if (err) {
       console.error('Error setting data in Redis:', err);
       res.status(500).send('Error setting data');
@@ -68,7 +71,6 @@ app.post('/set', (req, res) => {
     res.status(200).json({ message: 'Key-value pair saved' });
   });
 });
-
 
 app.listen(8000, () => {
   console.log('Server started on port 8000');
