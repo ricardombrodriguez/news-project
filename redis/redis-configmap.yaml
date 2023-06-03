@@ -27,19 +27,25 @@ data:
       START_SLOT=$(( $NUM_SLOTS * $MY_SHARD + ($MY_SHARD < $REMAINDER ? $MY_SHARD : $REMAINDER) ))
       END_SLOT=$(( $NUM_SLOTS * ($MY_SHARD+1) + ($MY_SHARD+1 < $REMAINDER ? $MY_SHARD+1 : $REMAINDER) - 1 ))
 
-      PEER_IP=$(perl -MSocket -e "print inet_ntoa(scalar(gethostbyname(\"redis-master-0.redis-master-svc.gic-group-6.svc.cluster.local\")))")
+      PEER_IP=$(perl -MSocket -e "print inet_ntoa(scalar(gethostbyname(\"redis-master-0.redis-master-svc.gic-group-6\")))")
       echo $PEER_IP
+      #host="redis-master-0.redis-master-svc.gic-group-6.svc.cluster.local"
+      #echo $host
       redis-cli cluster meet $PEER_IP 6379
       redis-cli cluster addslots $(seq $START_SLOT $END_SLOT)
     else
       # Set up a replica
-      PEER_IP=$(perl -MSocket -e "print inet_ntoa(scalar(gethostbyname(\"redis-master-$MY_SHARD.redis-master-svc.gic-group-6.svc.cluster.local\")))")
+      # host="redis-master-$MY_SHARD.redis-master-svc.gic-group-6.svc.cluster.local"
+      PEER_IP=$(perl -MSocket -e "print inet_ntoa(scalar(gethostbyname(\"redis-master-$MY_SHARD.redis-master-svc.gic-group-6\")))")
       echo $PEER_IP
       redis-cli --cluster add-node localhost:6379 $PEER_IP:6379 --cluster-slave
     fi
 
     wait
+    
   redis.conf: |+
+    bind 0.0.0.0
+    port 6379
     cluster-enabled yes
     cluster-require-full-coverage no
     cluster-node-timeout 15000

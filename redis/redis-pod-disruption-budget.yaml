@@ -2,9 +2,19 @@
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: redis-pod-disruption-budget
+  name: redis-pod-disruption-budget-master
 spec:
   selector:
     matchLabels:
-      app: redis
+      app: redis-master
+  maxUnavailable: 0
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: redis-pod-disruption-budget-slave
+spec:
+  selector:
+    matchLabels:
+      app: redis-slave
   maxUnavailable: 0
