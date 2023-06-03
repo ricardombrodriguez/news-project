@@ -23,8 +23,8 @@ spec:
         image: registry.deti:5000/gic-group-6/backend:v24
         resources:
           requests:
-            memory: "32Mi"
-            cpu: "10m"
+            memory: "96Mi"
+            cpu: "400m"
           limits:
             memory: "128Mi"
             cpu: "500m"
