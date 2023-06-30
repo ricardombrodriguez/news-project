@@ -1,0 +1,14 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: redis-cluster-monitor-master
+  namespace: gic-group-6
+  labels:
+    app: redis-master
+spec:
+  selector:
+    matchLabels:
+      app: redis-master
+  endpoints:
+    - port: client
+      path: /metrics
