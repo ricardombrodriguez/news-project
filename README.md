@@ -64,6 +64,9 @@ chmod 777 apply-k8s.sh
 ```
 
 
+### Grade
+
+17.8 out of 20
 
 
 
